@@ -1,0 +1,49 @@
+{
+  "campaign_name": "The AI Org Story",
+  "copy_leads_from_campaign": 3650610,
+  "sending_mailbox": "abhiraj@getaudria.com",
+  "mailbox_signature": "Abhiraj",
+  "steps": [
+    {
+      "seq_number": 1,
+      "delay_days": 0,
+      "subject": "does ChatGPT know {{company_name}}?",
+      "body": [
+        "Hi {{first_name}},",
+        "Your team talks all day. Most decisions happen in those conversations, and almost nothing from them gets written down. So when you ask ChatGPT or Claude anything about your company, it answers from the few docs and tickets someone typed. It knows nothing about the rest.",
+        "Audria is an agentic AI notetaker. Turn it on when you reach the office and every conversation is captured: every decision, every commitment, every reason behind them. Your Claude or ChatGPT finally gets all of it. Ask why the roadmap changed in March and it actually knows.",
+        "Audria drafts the follow-through too. Before you are back at your desk, the email is written and the ticket is ready, each waiting for your approval. Nothing is sent automatically.",
+        "Live now, free during early access on iPhone and Mac. Want your AI to know your company? <a href=\"https://apps.apple.com/app/audria/id6759240637\">Audria on the App Store</a>",
+        "%signature%"
+      ]
+    },
+    {
+      "seq_number": 2,
+      "delay_days": 3,
+      "subject": "",
+      "_subject_note": "Empty on purpose. Smartlead threads an empty-subject step as a reply under step 1, which is what 're: does ChatGPT know [Company]?' was asking for. Typing the 're:' literally would open a new thread that only looks like a reply.",
+      "body": [
+        "Hi {{first_name}}, one thought and then I will leave it.",
+        "Every company now uses the same AI models. The edge is what yours gets to see. For most companies that is docs and tickets, the small part that got written down. Everything decided out loud never reaches it.",
+        "That is the gap Audria closes, free during early access: <a href=\"https://apps.apple.com/app/audria/id6759240637\">Audria on the App Store</a>",
+        "%signature%"
+      ]
+    },
+    {
+      "seq_number": 3,
+      "delay_days": 7,
+      "subject": "what I learned reading 900 comments about AI meeting tools",
+      "_variant_note": "Long version only, identical to sequences 1 and 2 step 3. The short version and the half/half split were not supplied; add as a second seq_variant at 50/50 when it arrives.",
+      "body": [
+        "Hi {{first_name}}, last one from me.",
+        "Before we wrote a line of positioning, I read about 900 comments from people using AI meeting tools. Three things stood out.",
+        "One. Transcription is finished as a business. Someone in those threads transcribed 60 meetings for under two dollars with a pipeline he built himself. There are around a hundred of these apps and prices are collapsing toward zero.",
+        "Two. Summaries tell you what was discussed, not who is on the hook. Two separate people asked whether any tool could pull the actual commitments out of a meeting, the \"I will send it by Thursday\" moments, without a human cleaning it up afterwards. In threads full of vendors, both questions got zero replies.",
+        "Three. Nearly everything needs you to press record. A few wearables and one second-brain app listen all day, but every meeting tool people actually recommended only sees the meetings you chose to capture. And even the always-on ones stop at transcripts and summaries. Nothing comes back with the work done.",
+        "Audria answers all three. Transcription is in there as table stakes. Every action it drafts names who said they would do what, with the exact line from the conversation as proof, waiting for your approval. And there is no record button: you turn it on once when you reach the office, and what comes back is the email drafted and the ticket ready to file. We have not found anyone else with that combination.",
+        "It is live, free during early access on iPhone and Mac: <a href=\"https://apps.apple.com/app/audria/id6759240637\">Audria on the App Store</a>",
+        "%signature%"
+      ]
+    }
+  ]
+}
