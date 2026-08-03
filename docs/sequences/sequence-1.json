@@ -13,7 +13,7 @@
         "Most of what you commit to in a week is never written down anywhere. You said it out loud, at someone's desk, in the corridor after standup, over coffee with the laptop shut. By Thursday, half of it is gone.",
         "Audria is an agentic AI notetaker. You turn it on when you reach the office and it catches the whole day. By the time you are back at your desk, the email is drafted, the Jira ticket is ready to file, and each one shows the exact words it came from. Nothing is sent automatically. You review, edit if needed, and approve.",
         "And it adds up. Months of thinking out loud, your idea's whole evolution, every pivot, laid out in front of you.",
-        "It is live now, free during early access on iPhone and Mac. Want to see your own week captured? <a href=\"https://apps.apple.com/app/audria/id6759240637\">Audria on the App Store</a>",
+        "It is live now, free during early access on iPhone and Mac. Want to see your own week captured? Just reply and I will send the link.",
         "%signature%"
       ]
     },
@@ -25,7 +25,7 @@
       "body": [
         "Hi {{first_name}}, one thought and then I will leave it.",
         "Nearly every meeting tool needs you to press record, so it only ever sees what is on your calendar. The desk conversation, the corridor, the coffee, none of it gets caught. That is most of a founder's day.",
-        "That is the gap Audria exists for, and you can try it today, free during early access: <a href=\"https://apps.apple.com/app/audria/id6759240637\">Audria on the App Store</a>",
+        "That is the gap Audria exists for, and you can <a href=\"https://apps.apple.com/app/audria/id6759240637\">try it today</a>, free during early access.",
         "%signature%"
       ]
     },
@@ -41,7 +41,7 @@
         "Two. Summaries tell you what was discussed, not who is on the hook. Two separate people asked whether any tool could pull the actual commitments out of a meeting, the \"I will send it by Thursday\" moments, without a human cleaning it up afterwards. In threads full of vendors, both questions got zero replies.",
         "Three. Nearly everything needs you to press record. A few wearables and one second-brain app listen all day, but every meeting tool people actually recommended only sees the meetings you chose to capture. And even the always-on ones stop at transcripts and summaries. Nothing comes back with the work done.",
         "Audria answers all three. Transcription is in there as table stakes. Every action it drafts names who said they would do what, with the exact line from the conversation as proof, waiting for your approval. And there is no record button: you turn it on once when you reach the office, and what comes back is the email drafted and the ticket ready to file. We have not found anyone else with that combination.",
-        "It is live, free during early access on iPhone and Mac: <a href=\"https://apps.apple.com/app/audria/id6759240637\">Audria on the App Store</a>",
+        "It is live and <a href=\"https://apps.apple.com/app/audria/id6759240637\">free during early access</a> on iPhone and Mac.",
         "%signature%"
       ]
     }

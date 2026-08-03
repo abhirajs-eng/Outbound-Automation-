@@ -87,7 +87,12 @@ def main():
     ap.add_argument("--campaign-id", type=int,
                     help="configure this existing campaign instead of creating "
                          "one; use to resume after a partial failure")
+    ap.add_argument("--sequences-only", action="store_true",
+                    help="with --campaign-id, replace only the email copy; "
+                         "leaves leads, schedule, settings and mailboxes alone")
     args = ap.parse_args()
+    if args.sequences_only and not args.campaign_id:
+        sys.exit("--sequences-only requires --campaign-id")
 
     if not API_KEY:
         sys.exit("SMARTLEAD_API_KEY is not set")
@@ -109,6 +114,14 @@ def main():
     if args.dry_run:
         print(json.dumps({"schedule": SCHEDULE, "settings": SETTINGS,
                           "sequences": sequences}, indent=2))
+        return
+
+    if args.sequences_only:
+        _, err = call("POST", f"campaigns/{args.campaign_id}/sequences",
+                      {"sequences": sequences})
+        if err:
+            die("replacing sequences", err)
+        print(f"  sequences replaced on campaign {args.campaign_id}")
         return
 
     # 1. leads first -- if the source campaign can't be read, nothing is created
