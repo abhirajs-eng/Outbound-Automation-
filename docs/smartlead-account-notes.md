@@ -125,13 +125,21 @@ The house pattern. Match it unless there's a reason not to.
 ## Mailboxes
 
 18 connected, all `warmup_status: ACTIVE`, reputation 99–100%, SMTP and IMAP
-both verified, `message_per_day: 15`, and **`total_sent_count: 0`** — warmed but
-never used for real sending.
+both verified, and **`total_sent_count: 0`** — warmed but never used for real
+sending. Two domains: `@getaudria.com` (9) and `@audriahq.com` (9).
 
-Two domains: `@getaudria.com` (9) and `@audriahq.com` (9).
+**16 in the sending pool at 25/day = 400 emails/day.** Set 2026-08-03.
 
-At 18 mailboxes × 15/day the ceiling is 270/day, while campaigns cap at 10
-leads/day. The mailbox pool is sized far beyond current campaign config.
+Held back, left at 15/day and out of every campaign until warmup is further
+along: `harsh@audriahq.com`, `sneha@getaudria.com`.
+
+Every mailbox in the pool now has a signature, so `%signature%` resolves
+wherever a campaign rotates. Convention is the bare first name of `from_name`
+(`Robert`, `Jessica`, …), matching the three that were already set.
+
+One oddity to be aware of: `jamie@audriahq.com` has `from_name` "Adam Cooper",
+so its signature is `Adam` — the local part and the display name disagree.
+Nothing breaks, but a recipient who looks will notice.
 
 ## Live campaigns
 
