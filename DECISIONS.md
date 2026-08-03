@@ -1,0 +1,187 @@
+# Decisions, verified contracts, and places the spec was wrong
+
+Every entry records what was checked, when, and against what. Where a claim has
+not been verified against a live API it says so explicitly — an unverified
+assumption recorded as fact is how the previous build lost an architecture.
+
+---
+
+## Verification status by source
+
+| Claim | Status | Date | How |
+|---|---|---|---|
+| §1.3 sample size: 2%→3% needs ~3,825/variant | **Confirmed** | 2026-08-03 | Computed, this repo |
+| §1.3 Bayesian: 8-vs-16 on n=200 clears 0.95 | **Confirmed** | 2026-08-03 | Computed, this repo |
+| §1.3 "200 delivered / 8 positive" floor detects ~4%→11.5% | **Confirmed** | 2026-08-03 | Computed, this repo |
+| §6 capacity worked example (2×3×30 ÷ 4 = 45) | **Confirmed** | 2026-08-03 | `tests/test_capacity.py` |
+| Postgres schema behaviour (all constraints) | **Confirmed** | 2026-08-03 | Live Postgres 16.13 |
+| §1.1 Apollo endpoint costs and response fields | **Inherited, unverified here** | spec: 2026-07-30/31 | Not re-checked — no key configured |
+| §1.6 Smartlead contract | **Inherited, unverified here** | spec: 2026-07-30/31 | Not re-checked — no key configured |
+| §2 HubSpot facts (tiers, scopes, limits) | **Inherited, unverified here** | spec: 2026-08-03 | Not re-checked — no token configured |
+
+The inherited rows are treated as true for design purposes and **re-verified at
+the start of the phase that first depends on them** (Phase 2 HubSpot, Phase 3
+Apollo, Phase 5 Smartlead). Where docs and live behaviour disagree, live wins
+and the discrepancy is recorded here with a date.
+
+---
+
+## Statistical claims — checked, not taken on faith
+
+Computed with a closed-form two-proportion z sample size and the exact
+beta-binomial `P(B>A)` series, both in plain Python.
+
+**2% → 3% positive-reply rate, α=0.05 two-sided, 80% power: n = 3,825.1 per
+variant.** The spec's ~3,825 is exact. At ~45 enrollments/day split two ways
+this is ~170 days per conclusive test, which is why futility detection carries
+nearly all the value at this volume.
+
+**A "200 delivered, 8 positive" floor detects 4% → 11.5% (n=198/arm).** It does
+not detect anything smaller. Nothing in cold email copy produces a 187%
+relative lift, so that floor is not a real gate.
+
+**At n=200, 8 vs 16 conversions gives P(B>A) = 0.9516** with Beta(1,1) priors.
+This *clears* a 0.95 Bayesian threshold. The statistics alone would crown that
+winner. **The minimum-sample gate is therefore not redundant with the
+statistical test** — it is the only thing that stops this. Encoded as
+`experiments.min_delivered_per_variant`, default 400.
+
+---
+
+## Where this build departs from the spec
+
+### 1. Open rate: absent rather than raising
+
+**Spec (§1.4):** "make the accessor raise, don't just document it."
+
+**Built:** open rate is not a field on the metrics dataclass or its dict form at
+all. A separately named diagnostic function computes it and is never called by
+decision code.
+
+**Why:** a property that raises is a landmine for anything that iterates or
+serialises all metrics — dashboard rendering, CSV export, a debug repr. The
+guarantee wanted is "no decision path can read this," and absence delivers that
+without making unrelated code crash. Recorded because it is a deliberate
+deviation, not an oversight. Arrives in Phase 6.
+
+### 2. The repo was not empty
+
+The spec assumes an empty repo. This one already holds the Audria X/Twitter
+growth system (`docs/`, `daily/`, `.claude/skills/audria-daily/`). Those are
+untouched; the outbound system was added alongside in `app/`, `migrations/`,
+`config/`, `tests/`, `tools/`.
+
+This turned out to be useful rather than awkward: `docs/audria-x-growth-operating-doc.md`
+§1 already defines the ICP (Seed–Series B, US-based, physical US office, working
+from it) and it matches spec §4. `config/icp.yaml` is now the single definition
+both systems read, rather than a second copy that drifts.
+
+### 3. Section 0 was left unfilled
+
+Sourced from the existing operating doc (real, not guessed):
+
+- `COMPANY_NAME` = Audria
+- `WHAT_WE_SELL` = meeting memory — commitments, decisions, context
+- `TIMEZONE` = Asia/Kolkata ops, America/New_York sending
+- ICP = Seed–Series B US founders with a physical US office
+
+**Not guessed, left blocking:** `PHYSICAL_ADDRESS`, `SENDING_DOMAINS`,
+`MAILBOXES_PER_DOMAIN`, `SENDS_PER_MAILBOX_DAY`, `HUBSPOT_PORTAL_ID`,
+`DRIVE_SEQUENCE_FOLDER`. `/capacity` reports `not_configured` rather than a
+fabricated number, and `Settings.require_physical_address()` raises.
+
+---
+
+## Schema decisions
+
+**Funding stage is nullable and NULL means "not enriched."** It does not mean
+"no funding." The ICP evaluator returns `PENDING` for it. There is a test whose
+entire job is to fail if someone later makes unknown stage a hard filter —
+that change made every sourced lead in a previous build un-enrollable.
+
+**The approval gate is a CHECK constraint**
+(`campaigns_approval_gate`): `status <> 'active' OR (approved_by IS NOT NULL AND
+approved_at IS NOT NULL AND launched_at IS NOT NULL)`. Verified live: an INSERT
+of an active campaign without an approver is rejected by Postgres.
+
+**CAN-SPAM is a trigger, not a CHECK.** A CHECK constraint cannot reference
+another table, and compliance lives on `sequence_versions`. The trigger raises
+on any attempt to move a campaign to `approved` or `active` with non-compliant
+copy. Verified live: the INSERT fails with a `CAN-SPAM:` message. Drafting
+non-compliant copy is still allowed — the gate is on activation, not authoring.
+
+**`variant_label` is denormalised onto `campaign_leads`.** This is the §1.4 bug
+made structurally hard to reproduce: a variant filter must narrow the **lead**
+scope, because replies attach to leads and not to events. Filtering only events
+credits every variant with every other variant's replies. With the label on the
+lead row, the natural query is the correct one.
+
+**`office_signal` requires evidence** (`companies_office_signal_needs_evidence`):
+any value other than `unknown` needs a non-empty evidence array. An office
+signal with no evidence behind it is not auditable and will quietly become
+folklore.
+
+**`mailboxes.daily_cap` is capped at 50** in the schema. Cold mailboxes die
+above roughly that, and a limit that lives only in a config comment gets raised
+by whoever is in a hurry.
+
+**Partial unique indexes throughout**, because `apollo_person_id`, `email`, and
+`hubspot_contact_id` are all genuinely absent on some rows and NULL must not
+collide with NULL. Email and domain uniqueness are on `lower(...)` — verified
+live that `Jane@Acme.com` and `jane@acme.com` collide.
+
+**Advisory locks, not a locks table.** An advisory lock dies with its
+connection. A row left by a crashed 3am job blocks every later run until a human
+notices. `lock_key()` uses `zlib.crc32`, not `hash()` — Python's `hash` is
+salted per process, so the same job name would produce a different key in each
+container.
+
+---
+
+## Interface decisions
+
+**Job bodies receive their engine through `JobContext`.** §1.8's trap: a
+framework whose `execute_job(engine=…)` governs only locking and bookkeeping,
+while the job body reaches for a global session, writes to a different database
+than it reports. There is deliberately no module-level engine or session in
+`app/db.py`, so a job body cannot reach one. The heartbeat job reads through
+`ctx.session()` specifically so this regression surfaces immediately.
+
+**Mutating calls are never retried.** `with_retries(mutating=True)` disables
+retries entirely rather than reducing them. A timeout tells you nothing about
+whether the write landed, and a duplicate campaign or double send is worse than
+a failed request. Backoff uses full jitter — without it, every client that
+failed together retries together.
+
+**`app/domain/` imports no ORM and no HTTP client.** Scoring, statistics,
+sequence parsing and API clients all operate on plain dataclasses. Enforced by
+the fact that the domain tests run with no database at all.
+
+---
+
+## Environment limitations found during this build
+
+**PyPI is blocked by this session's egress policy** (403 from `pypi.org` and
+`files.pythonhosted.org`, both direct and through the agent proxy). Consequence:
+`fastapi`, `sqlalchemy`, `psycopg`, `apscheduler`, `scipy` and `pytest` could
+not be installed, so **`pytest` was never executed in this environment.**
+
+What was verified instead, and how:
+
+- **Migrations and every schema constraint** — against a live local
+  Postgres 16.13, applying the `.sql` files with `psql` directly. Up, down, and
+  up again all clean; 21 tables created, zero objects left behind on reverse.
+  All 20 constraint cases behaved correctly.
+- **All pure domain logic** — 52 assertions covering ICP evaluation, title
+  normalisation, the 90-day cap, subdomain suppression, signal decay, capacity
+  arithmetic and dedup keys, run directly against the modules (`pyyaml` is
+  present in the system Python). All 52 pass.
+
+The `pytest` suite in `tests/` is written and mirrors those assertions exactly,
+but **its first real run will be on a machine with PyPI access.** Treat the
+Phase 1 checkpoint as verified for the schema and the domain logic, and as
+*unrun* for `tests/test_schema.py` and `tests/test_migrations.py` as pytest
+files — their content was executed as SQL and as plain Python respectively.
+
+`docker compose build` was likewise not executed here, for the same reason: the
+image build installs from PyPI.

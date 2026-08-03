@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS source_cursors;
+DROP TABLE IF EXISTS job_runs;
+DROP TABLE IF EXISTS mailboxes;
+DROP TABLE IF EXISTS suppressions;
+DROP TABLE IF EXISTS contacts;
+DROP TABLE IF EXISTS companies;
+DROP FUNCTION IF EXISTS set_updated_at();

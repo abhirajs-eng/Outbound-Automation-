@@ -1,0 +1,134 @@
+# ICP definition. Every routine that scores, filters, or sources reads this
+# file -- there is no second copy of these rules in Python.
+#
+# The three sections are not interchangeable:
+#   hard          queryable in Apollo people search; wrong value = disqualified
+#   enrichment    costs 1 credit/company; unknown = PENDING, never a fail
+#   scored        Apollo cannot query it; contributes to priority, never filters
+#
+# A previous build hard-failed on unknown funding stage and every sourced lead
+# became un-enrollable. Do not move funding_stage into `hard`.
+
+version: 1
+
+hard:
+  titles:
+    # Exact matches, lowercased and punctuation-normalised before comparison.
+    # "Co-Founder & CEO" and "Cofounder & CEO" are here deliberately: they are
+    # the most common founder self-description, and without them the highest
+    # intent title scores as a partial match and ranks below a bare "Founder".
+    exact:
+      - founder
+      - co-founder
+      - cofounder
+      - co founder
+      - founding partner
+      - founder & ceo
+      - co-founder & ceo
+      - cofounder & ceo
+    # CEO qualifies only when the record is also flagged founder.
+    ceo_requires_founder_flag: true
+    # Apollo's include_similar_titles is set false; these are our own fallbacks
+    # and score lower than an exact match.
+    partial:
+      - founder
+      - cofounder
+      - co-founder
+
+  person_locations:
+    - United States
+  organization_locations:
+    - United States
+
+enrichment:
+  funding_stage:
+    # 1 credit per matched company via organizations/bulk_enrich. This is the
+    # only endpoint where latest_funding_stage exists -- there is no funding
+    # stage filter anywhere in Apollo search.
+    accept:
+      - seed
+      - series_a
+      - series_b
+    # Explicitly out of ICP once known.
+    reject:
+      - series_c
+      - series_d_plus
+      - public
+      - acquired
+    unknown_is: pending
+
+scored:
+  office_signal:
+    # Not queryable. Populated only from real evidence (an office-opening post,
+    # an onsite job listing) and stored with that evidence so the value is
+    # auditable. Also used to slice reply rates -- which is how we find out
+    # whether the criterion predicts conversion at all.
+    weights:
+      confirmed_in_office: 100
+      likely_in_office: 60
+      likely_remote: 0
+      unknown: 25
+
+  company_founded_year_min: 2018
+
+  keyword_tags:
+    - SaaS
+    - software
+    - artificial intelligence
+    - fintech
+
+exclusions:
+  # Enforced globally before enrollment, never per-campaign.
+  existing_customers: true
+  open_opportunities: true
+  suppression_list: true
+  emailed_within_days: 90
+  competitor_domains: []
+  free_mail_domains:
+    - gmail.com
+    - yahoo.com
+    - hotmail.com
+    - outlook.com
+    - icloud.com
+    - aol.com
+    - proton.me
+    - protonmail.com
+
+# Recency dominates: a new-office post is white-hot for 7 days and cold by 45.
+signals:
+  new_office:
+    weight: 100
+    half_life_days: 14
+  vendor_complaint:
+    weight: 90
+    half_life_days: 10
+  return_to_office:
+    weight: 85
+    half_life_days: 21
+  funding_announcement:
+    weight: 80
+    half_life_days: 30
+  hiring_onsite:
+    weight: 70
+    half_life_days: 21
+  city_expansion:
+    weight: 65
+    half_life_days: 30
+  team_growth:
+    weight: 45
+    half_life_days: 21
+
+# Apollo people search filters. Without these you get celebrities, nonprofits
+# and VC funds; with them the results are genuinely early-stage tech companies.
+# The filters matter more than any post-processing.
+apollo_search:
+  person_seniorities:
+    - owner
+    - founder
+  include_similar_titles: false
+  organization_num_employees_ranges:
+    - "1,10"
+    - "11,20"
+    - "21,50"
+  organization_founded_year_range:
+    min: 2018

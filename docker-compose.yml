@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: outbound
+      POSTGRES_PASSWORD: outbound
+      POSTGRES_DB: outbound
+    ports:
+      # 5433 on the host so a native Postgres install can coexist.
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U outbound -d outbound"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  # One-shot. app and scheduler both wait for this to exit cleanly, so they
+  # cannot race each other running migrations on boot.
+  migrate:
+    build: .
+    command: python -m tools.migrate up
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://outbound:outbound@db:5432/outbound
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  app:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://outbound:outbound@db:5432/outbound
+    ports:
+      - "8000:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  # Its own process. Scaling the web tier must not multiply cron jobs.
+  scheduler:
+    build: .
+    command: python -m app.jobs.registry
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://outbound:outbound@db:5432/outbound
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  pgdata:

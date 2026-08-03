@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS campaign_leads;
+DROP TABLE IF EXISTS campaign_mailboxes;
+DROP TRIGGER IF EXISTS campaigns_enforce_compliance ON campaigns;
+DROP TABLE IF EXISTS campaigns;
+DROP FUNCTION IF EXISTS enforce_campaign_compliance();
+DROP TABLE IF EXISTS step_variants;
+DROP TABLE IF EXISTS sequence_steps;
+DROP VIEW IF EXISTS sequence_version_compliance;
+DROP TABLE IF EXISTS sequence_versions;
+DROP TABLE IF EXISTS sequences;
