@@ -1,0 +1,635 @@
+{
+  "3650607": {
+    "name": "FINAL Qualifiers 1",
+    "total": "11",
+    "leads": [
+      {
+        "id": 4186065451,
+        "first_name": "Siqi",
+        "last_name": "Chen",
+        "email": "siqi@runway.com",
+        "phone_number": null,
+        "company_name": "Runway",
+        "website": "www.runway.com",
+        "location": "San Francisco, CA",
+        "custom_fields": {
+          "industry": "FP&A SaaS",
+          "verified_stage": "Series A",
+          "verified_employees": "11-50"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.runway.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065463,
+        "first_name": "Emmett",
+        "last_name": "Shear",
+        "email": "emmett@softmax.com",
+        "phone_number": null,
+        "company_name": "SoftMax",
+        "website": "www.softmax.com",
+        "location": "San Francisco, CA",
+        "custom_fields": {
+          "industry": "AI software",
+          "verified_stage": "Seed",
+          "verified_employees": "~10"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.softmax.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065467,
+        "first_name": "Peter",
+        "last_name": "Jones",
+        "email": "peter.jones@localised.com",
+        "phone_number": null,
+        "company_name": "Localised",
+        "website": "localised.com",
+        "location": "New York, NY",
+        "custom_fields": {
+          "industry": "Ecommerce SaaS",
+          "verified_stage": "Series A",
+          "verified_employees": "~37"
+        },
+        "linkedin_profile": null,
+        "company_url": "localised.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065438,
+        "first_name": "Arlan",
+        "last_name": "Hamilton",
+        "email": "arlan@hirerunner.co",
+        "phone_number": null,
+        "company_name": "Runner",
+        "website": "www.hirerunner.co",
+        "location": "Los Angeles, CA",
+        "custom_fields": {
+          "industry": "SaaS marketplace",
+          "verified_stage": "Pre-seed/Seed",
+          "verified_employees": "<50"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.hirerunner.co",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065439,
+        "first_name": "Andrew",
+        "last_name": "Lee",
+        "email": "andrew@shortwave.com",
+        "phone_number": null,
+        "company_name": "Shortwave",
+        "website": "www.shortwave.com",
+        "location": "Covina, CA",
+        "custom_fields": {
+          "industry": "AI email",
+          "verified_stage": "Series A",
+          "verified_employees": "~17"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.shortwave.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065433,
+        "first_name": "Joseph",
+        "last_name": "Zawadzki",
+        "email": "joe@fxm.co",
+        "phone_number": null,
+        "company_name": "FXM",
+        "website": "fxm.co",
+        "location": "New York, NY",
+        "custom_fields": {
+          "industry": "Fintech software",
+          "verified_stage": "Seed (early)",
+          "verified_employees": "small"
+        },
+        "linkedin_profile": null,
+        "company_url": "fxm.co",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065456,
+        "first_name": "Kun",
+        "last_name": "Gao",
+        "email": "kgao@ggwp.com",
+        "phone_number": null,
+        "company_name": "GGWP",
+        "website": "www.ggwp.com",
+        "location": "San Francisco, CA",
+        "custom_fields": {
+          "industry": "AI gaming software",
+          "verified_stage": "Seed",
+          "verified_employees": "11-50"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.ggwp.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065442,
+        "first_name": "Solomon",
+        "last_name": "Hykes",
+        "email": "solomon@dagger.io",
+        "phone_number": null,
+        "company_name": "Dagger",
+        "website": "www.dagger.io",
+        "location": "Belmont, CA",
+        "custom_fields": {
+          "industry": "DevOps software",
+          "verified_stage": "Series A",
+          "verified_employees": "~17"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.dagger.io",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065440,
+        "first_name": "Brian",
+        "last_name": "Mac Mahon",
+        "email": "brian@matchbookai.com",
+        "phone_number": null,
+        "company_name": "Matchbook AI",
+        "website": "www.matchbookai.com",
+        "location": "Santa Monica, CA",
+        "custom_fields": {
+          "industry": "Enterprise data SaaS",
+          "verified_stage": "Seed",
+          "verified_employees": "~25-45"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.matchbookai.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065458,
+        "first_name": "Richard",
+        "last_name": "Munassi",
+        "email": "richard@medzoomer.com",
+        "phone_number": null,
+        "company_name": "MedZoomer",
+        "website": "www.medzoomer.com",
+        "location": "Tampa, FL",
+        "custom_fields": {
+          "industry": "Rx-delivery platform",
+          "verified_stage": "Seed ($6.5M)",
+          "verified_employees": "44"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.medzoomer.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186950642,
+        "first_name": "Abhiraj",
+        "last_name": null,
+        "email": "abhiraj.s@audria.tech",
+        "phone_number": null,
+        "company_name": "Audria",
+        "website": "audria.tech",
+        "location": null,
+        "custom_fields": {},
+        "linkedin_profile": null,
+        "company_url": "audria.tech",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      }
+    ]
+  },
+  "3650609": {
+    "name": "FINAL Qualifiers 2",
+    "total": "11",
+    "leads": [
+      {
+        "id": 4186065539,
+        "first_name": "Andy",
+        "last_name": "Chou",
+        "email": "andy@ventrilo.ai",
+        "phone_number": null,
+        "company_name": "Ventrilo.ai",
+        "website": "www.ventrilo.ai",
+        "location": "San Francisco, CA",
+        "custom_fields": {
+          "industry": "AI software-testing",
+          "verified_stage": "Seed ($10M)",
+          "verified_employees": "~9-14"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.ventrilo.ai",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065543,
+        "first_name": "Richard",
+        "last_name": "Gordon",
+        "email": "rick.gordon@tidalcyber.com",
+        "phone_number": null,
+        "company_name": "Tidal Cyber",
+        "website": "www.tidalcyber.com",
+        "location": "Clifton, VA",
+        "custom_fields": {
+          "industry": "Cybersecurity software",
+          "verified_stage": "Series A",
+          "verified_employees": "45"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.tidalcyber.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065544,
+        "first_name": "David",
+        "last_name": "Weekly",
+        "email": "david@medcorder.com",
+        "phone_number": null,
+        "company_name": "Medcorder",
+        "website": "www.medcorder.com",
+        "location": "Redwood City, CA",
+        "custom_fields": {
+          "industry": "Medical transcription app",
+          "verified_stage": "Seed",
+          "verified_employees": "~5"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.medcorder.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065535,
+        "first_name": "Dhiraj",
+        "last_name": "Singh",
+        "email": "vic@originalis.ai",
+        "phone_number": null,
+        "company_name": "Originalis",
+        "website": "www.originalis.ai",
+        "location": "New York, NY",
+        "custom_fields": {
+          "industry": "AI OS for private capital",
+          "verified_stage": "Seed/Series A ($4.6M)",
+          "verified_employees": "11"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.originalis.ai",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065536,
+        "first_name": "Trevor",
+        "last_name": "Koverko",
+        "email": "trevor@sapien.io",
+        "phone_number": null,
+        "company_name": "Sapien",
+        "website": "www.sapien.io",
+        "location": "San Francisco, CA",
+        "custom_fields": {
+          "industry": "AI data-labeling marketplace",
+          "verified_stage": "Seed ($10.5M)",
+          "verified_employees": "small (early)"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.sapien.io",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065542,
+        "first_name": "Ankit",
+        "last_name": "Bhati",
+        "email": "ankit@amnic.com",
+        "phone_number": null,
+        "company_name": "Amnic",
+        "website": "www.amnic.com",
+        "location": "Los Altos, CA",
+        "custom_fields": {
+          "industry": "Cloud-cost/FinOps SaaS",
+          "verified_stage": "Seed ($20M)",
+          "verified_employees": "36"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.amnic.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065538,
+        "first_name": "Elias",
+        "last_name": "Torres",
+        "email": "elias@novy.ai",
+        "phone_number": null,
+        "company_name": "Agency (IT Consulting)",
+        "website": "www.agency.inc",
+        "location": "Boston, MA",
+        "custom_fields": {
+          "industry": "Agentic AI SaaS",
+          "verified_stage": "Series A ($20M)",
+          "verified_employees": "<50"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.agency.inc",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065541,
+        "first_name": "Aihui",
+        "last_name": "Ong",
+        "email": "aihui@transform-cap.com",
+        "phone_number": null,
+        "company_name": "EasyMate",
+        "website": "www.easymate.ai",
+        "location": "San Mateo, CA",
+        "custom_fields": {
+          "industry": "AI SaaS for SMBs",
+          "verified_stage": "Seed",
+          "verified_employees": "9-11"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.easymate.ai",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065540,
+        "first_name": "Amith",
+        "last_name": "Nagarajan",
+        "email": "amith.nagarajan@rasa.io",
+        "phone_number": null,
+        "company_name": "Rasa Solutions",
+        "website": "www.rasa.io",
+        "location": "New Orleans, LA",
+        "custom_fields": {
+          "industry": "AI newsletter SaaS",
+          "verified_stage": "Seed-level",
+          "verified_employees": "11-50"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.rasa.io",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065537,
+        "first_name": "Bernardo",
+        "last_name": "Hernandez",
+        "email": "bernardo@pensero.ai",
+        "phone_number": null,
+        "company_name": "Pensero Ai",
+        "website": "www.pensero.ai",
+        "location": "New York, NY",
+        "custom_fields": {
+          "industry": "AI perf-mgmt SaaS",
+          "verified_stage": "Seed ($5.6M)",
+          "verified_employees": "10"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.pensero.ai",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186987975,
+        "first_name": "Abhiraj",
+        "last_name": null,
+        "email": "abhiraj.s+test2@audria.tech",
+        "phone_number": null,
+        "company_name": "Audria",
+        "website": "audria.tech",
+        "location": null,
+        "custom_fields": {},
+        "linkedin_profile": null,
+        "company_url": "audria.tech",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      }
+    ]
+  },
+  "3650610": {
+    "name": "FINAL Qualifiers 3",
+    "total": "11",
+    "leads": [
+      {
+        "id": 4186065569,
+        "first_name": "Tom",
+        "last_name": "Chavez",
+        "email": "tom@boombox.io",
+        "phone_number": null,
+        "company_name": "Boombox",
+        "website": "www.boombox.io",
+        "location": "San Francisco, CA",
+        "custom_fields": {
+          "industry": "Music-collab SaaS",
+          "verified_stage": "Seed ($9.6M)",
+          "verified_employees": "~22"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.boombox.io",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065582,
+        "first_name": "Kashyap",
+        "last_name": "Deorah",
+        "email": "kashyap@hypertrack.com",
+        "phone_number": null,
+        "company_name": "HyperTrack",
+        "website": "www.hypertrack.com",
+        "location": "Berkeley, CA",
+        "custom_fields": {
+          "industry": "Location API/SDK",
+          "verified_stage": "Series A ($33M)",
+          "verified_employees": "21"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.hypertrack.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065568,
+        "first_name": "David",
+        "last_name": "Fox",
+        "email": "david.fox@modality.ai",
+        "phone_number": null,
+        "company_name": "Modality.Ai",
+        "website": "www.modality.ai",
+        "location": "San Francisco, CA",
+        "custom_fields": {
+          "industry": "AI health-assessment SW",
+          "verified_stage": "Seed ($6.3M)",
+          "verified_employees": "33"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.modality.ai",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065573,
+        "first_name": "Rikard",
+        "last_name": "Steiber",
+        "email": "rikard@mygoodtrust.com",
+        "phone_number": null,
+        "company_name": "GoodTrust",
+        "website": "www.mygoodtrust.com",
+        "location": "Palo Alto, CA",
+        "custom_fields": {
+          "industry": "Digital-legacy/estate SaaS",
+          "verified_stage": "Seed ($5M)",
+          "verified_employees": "~18"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.mygoodtrust.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065581,
+        "first_name": "Danielle",
+        "last_name": "Morrill",
+        "email": "danielle@firstpartyhq.com",
+        "phone_number": null,
+        "company_name": "Firstparty",
+        "website": "www.firstpartyhq.com",
+        "location": "Scottsdale, AZ",
+        "custom_fields": {
+          "industry": "Marketing-analytics SaaS",
+          "verified_stage": "Seed ($5.7M)",
+          "verified_employees": "1-10"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.firstpartyhq.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065583,
+        "first_name": "Brian",
+        "last_name": "Luerssen",
+        "email": "brian@draftbit.com",
+        "phone_number": null,
+        "company_name": "Draftbit",
+        "website": "www.draftbit.com",
+        "location": "Chicago, IL",
+        "custom_fields": {
+          "industry": "Low-code app-builder SaaS",
+          "verified_stage": "Seed",
+          "verified_employees": "~10"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.draftbit.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065571,
+        "first_name": "Gaurav",
+        "last_name": "Saraf",
+        "email": "gaurav@hopstack.io",
+        "phone_number": null,
+        "company_name": "Hopstack",
+        "website": "www.hopstack.io",
+        "location": "Austin, TX",
+        "custom_fields": {
+          "industry": "Warehouse-mgmt SaaS",
+          "verified_stage": "Seed ($3.2M)",
+          "verified_employees": "~22"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.hopstack.io",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065579,
+        "first_name": "Scott",
+        "last_name": "Chacon",
+        "email": "schacon@gitbutler.com",
+        "phone_number": null,
+        "company_name": "GitButler",
+        "website": "www.gitbutler.com",
+        "location": "Round Rock, TX",
+        "custom_fields": {
+          "industry": "Dev-tools software",
+          "verified_stage": "Series A ($17M)",
+          "verified_employees": "13"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.gitbutler.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065599,
+        "first_name": "Cassidy",
+        "last_name": "Williams",
+        "email": "cassidy@cosynd.com",
+        "phone_number": null,
+        "company_name": "Cosynd",
+        "website": "www.cosynd.com",
+        "location": "New York, NY",
+        "custom_fields": {
+          "industry": "Copyright-protection SaaS",
+          "verified_stage": "Seed",
+          "verified_employees": "~9"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.cosynd.com",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186065570,
+        "first_name": "Guillaume",
+        "last_name": "Luccisano",
+        "email": "guillaume@yuma.ai",
+        "phone_number": null,
+        "company_name": "Yuma",
+        "website": "www.yuma.ai",
+        "location": "Cambridge, MA",
+        "custom_fields": {
+          "industry": "AI customer-support SaaS",
+          "verified_stage": "Seed/Series A ($5.75M)",
+          "verified_employees": "~26-33"
+        },
+        "linkedin_profile": null,
+        "company_url": "www.yuma.ai",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      },
+      {
+        "id": 4186988416,
+        "first_name": "Abhiraj",
+        "last_name": null,
+        "email": "abhiraj.s+test3@audria.tech",
+        "phone_number": null,
+        "company_name": "Audria",
+        "website": "audria.tech",
+        "location": null,
+        "custom_fields": {},
+        "linkedin_profile": null,
+        "company_url": "audria.tech",
+        "is_unsubscribed": false,
+        "unsubscribed_client_id_map": {}
+      }
+    ]
+  }
+}
