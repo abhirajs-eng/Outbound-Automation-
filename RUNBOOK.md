@@ -100,6 +100,39 @@ decision point for a human, not something to swap around.
 **In all cases:** signals are a prioritisation input, not a gate. A broken signal
 provider degrades ordering; it does not stop outbound. Do not treat it as urgent.
 
+### HubSpot 403 when creating properties
+
+**Meaning:** the private app token is missing `crm.schemas.contacts.write` or
+`crm.schemas.companies.write`. These are separate from `crm.objects.*.write` and
+are the ones people forget.
+
+**Do:** edit the private app's scopes in the HubSpot UI, then re-run
+`provision_hubspot_properties`. Scope changes do not require a new token.
+
+The adapter names the missing scope in the error rather than reporting a bare
+403 — if you see a plain 403 from somewhere else, it is not this.
+
+### HubSpot webhooks returning 401
+
+Check `HUBSPOT_WEBHOOK_SECRET` matches the app. The endpoint **refuses unsigned
+requests, including when no secret is configured** — that is deliberate, not a
+misconfiguration to work around. It is an internet-reachable write path into the
+CRM mirror.
+
+Other causes, in order of likelihood: a proxy rewriting the request URI (the URI
+is part of what is signed), clock skew beyond five minutes, or a body being
+re-serialised in transit.
+
+### HubSpot rate limit (429)
+
+100 requests / 10 seconds on Free/Starter, 250,000/day. A 135-lead/day pipeline
+uses well under 0.1% of the daily allowance, **provided records go through the
+batch endpoints**. A sustained 429 means something is making per-record calls in
+a loop — look for a code path that bypassed `chunked()`.
+
+The client self-limits to 90/10s so a second process sharing the portal does not
+push the pair over. `Retry-After` is honoured when present.
+
 ### Job failing repeatedly
 
 ```sql

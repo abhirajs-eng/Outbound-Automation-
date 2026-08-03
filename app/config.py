@@ -105,6 +105,7 @@ class Settings:
 
     hubspot_portal_id: str | None
     hubspot_private_app_token: str | None
+    hubspot_webhook_secret: str | None
 
     smartlead_api_key: str | None
     drive_sequence_folder: str | None
@@ -213,6 +214,7 @@ def load_settings(dotenv: Path | None = None) -> Settings:
         ),
         hubspot_portal_id=os.environ.get("HUBSPOT_PORTAL_ID") or None,
         hubspot_private_app_token=os.environ.get("HUBSPOT_PRIVATE_APP_TOKEN") or None,
+        hubspot_webhook_secret=os.environ.get("HUBSPOT_WEBHOOK_SECRET") or None,
         smartlead_api_key=os.environ.get("SMARTLEAD_API_KEY") or None,
         drive_sequence_folder=os.environ.get("DRIVE_SEQUENCE_FOLDER") or None,
         signal_provider=signal_provider,

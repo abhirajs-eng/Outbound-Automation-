@@ -19,6 +19,7 @@ from app.db import build_engine
 from app.domain import capacity as capacity_mod
 from app.jobs.registry import REGISTRY
 from app.logging_setup import configure_logging
+from app.web.webhooks import router as webhooks_router
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,46 @@ async def lifespan(app: FastAPI):
     app.state.engine.dispose()
 
 
-app = FastAPI(title="GTM Outbound", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="GTM Outbound", version="0.2.0", lifespan=lifespan)
+
+# Registered before any parameterised route. `/leads/bulk/x` declared after
+# `/leads/{id}/x` makes the router parse "bulk" as an id -- keep specific
+# routes first as routes accumulate.
+app.include_router(webhooks_router)
+
+
+@app.get("/hubspot/status")
+def hubspot_status() -> JSONResponse:
+    """Whether the token works and which custom properties exist.
+
+    Reports what is actually missing rather than a boolean, so a token without
+    the crm.schemas.* scopes is diagnosable from the response.
+    """
+    settings = get_settings()
+    if not settings.hubspot_private_app_token:
+        return JSONResponse(
+            status_code=503,
+            content={
+                "configured": False,
+                "arrives_in_phase": 2,
+                "detail": (
+                    "HUBSPOT_PRIVATE_APP_TOKEN is not set. Create a private app "
+                    "at Settings -> Integrations -> Private Apps; the token is "
+                    "shown once. Scopes must include crm.schemas.contacts.write "
+                    "and crm.schemas.companies.write, which are what allow "
+                    "creating custom properties by API."
+                ),
+            },
+        )
+
+    from app.adapters.hubspot import HubSpotCrmStore
+
+    store = HubSpotCrmStore(settings.hubspot_private_app_token)
+    report = store.check_access()
+    return JSONResponse(
+        status_code=200 if report["ok"] else 502,
+        content={"configured": True, **report},
+    )
 
 
 @app.get("/health")

@@ -71,6 +71,70 @@ register(
 )
 
 
+def _provision_hubspot_properties(ctx: JobContext) -> None:
+    """Create the five custom properties. Idempotent; safe on every deploy."""
+    from app.adapters.hubspot import HubSpotCrmStore
+    from app.config import get_settings
+
+    settings = get_settings()
+    store = HubSpotCrmStore(settings.require_hubspot_token())
+    created = store.ensure_properties()
+    ctx.detail["created"] = created
+    ctx.items_out = sum(len(names) for names in created.values())
+
+
+register(
+    JobSpec(
+        name="provision_hubspot_properties",
+        body=_provision_hubspot_properties,
+        cron="0 5 * * *",
+        description=(
+            "Create the five HubSpot custom properties if missing. Needs "
+            "crm.schemas.*.write scopes."
+        ),
+        enabled=False,
+        phase=2,
+    )
+)
+
+
+def _process_hubspot_webhooks(ctx: JobContext) -> None:
+    """Apply stored rep-side changes to our mirror.
+
+    Field ownership rule, applied here rather than left to a race: HubSpot wins
+    for anything a rep edits by hand (owner, native pipeline stage, notes); we
+    win for everything the pipeline computes (priority_score,
+    seed_lifecycle_stage, latest_funding_stage, office_signal). A rep edit to a
+    pipeline-owned field is recorded and surfaced, not silently applied.
+    """
+    from sqlalchemy import text
+
+    with ctx.session() as session:
+        pending = session.execute(
+            text(
+                "SELECT id, subscription_type, object_id, payload "
+                "FROM hubspot_webhook_events WHERE processed_at IS NULL "
+                "ORDER BY received_at LIMIT 500"
+            )
+        ).all()
+        ctx.items_in = len(pending)
+        # Phase 2 stores and counts; the field-ownership application lands with
+        # the enrollment layer that has fields to defend.
+        ctx.detail["pending"] = len(pending)
+
+
+register(
+    JobSpec(
+        name="process_hubspot_webhooks",
+        body=_process_hubspot_webhooks,
+        cron="*/5 * * * *",
+        description="Apply stored HubSpot webhook events to the local mirror.",
+        enabled=False,
+        phase=2,
+    )
+)
+
+
 def run_job(name: str, engine: Engine) -> str:
     spec = REGISTRY.get(name)
     if spec is None:

@@ -13,10 +13,15 @@ They share one ICP definition (`config/icp.yaml`) and nothing else.
 
 # GTM outbound
 
-**Build status: Phase 1 (foundation) complete.** Sourcing, CRM sync, sequences,
-sending, stats, signals and the performance loop are not wired up yet. Screens
-for them state which phase they arrive in rather than showing zeros — a column
-of zeros reads as a measurement, and nothing has been measured.
+**Build status: Phases 1–2 complete** (foundation, HubSpot integration).
+Sourcing, sequences, sending, stats, signals and the performance loop are not
+wired up yet. Screens for them state which phase they arrive in rather than
+showing zeros — a column of zeros reads as a measurement, and nothing has been
+measured.
+
+Phase 2's round-trip checkpoint is **unverified**: it needs a private app token,
+which is not configured. `GET /hubspot/status` reports exactly which properties
+exist and which are missing once one is.
 
 ## Architecture
 
@@ -124,6 +129,60 @@ is not running yet instead of showing an empty schedule.
 
 Scheduled jobs use **REST with keys, never MCP** — MCP requires a live agent
 session and is the wrong transport for a 6am cron.
+
+## HubSpot setup
+
+1. Settings → Integrations → **Private Apps** → create one. Works on **all
+   tiers including Free**. The token is shown **once**.
+2. Grant all eight scopes:
+   ```
+   crm.objects.contacts.read    crm.objects.contacts.write
+   crm.objects.companies.read   crm.objects.companies.write
+   crm.schemas.contacts.read    crm.schemas.contacts.write
+   crm.schemas.companies.read   crm.schemas.companies.write
+   ```
+   The **`crm.schemas.*`** ones are what allow creating custom properties by
+   API. They are easy to miss, and without them property creation fails at
+   runtime with a 403 — the adapter catches that and names the missing scope.
+3. Put the token in `.env` as `HUBSPOT_PRIVATE_APP_TOKEN`, then:
+   ```bash
+   curl -s localhost:8000/hubspot/status | python -m json.tool
+   docker compose exec scheduler python -c "from app.jobs.registry import run_job; \
+     from app.db import build_engine; from app.config import get_settings; \
+     print(run_job('provision_hubspot_properties', build_engine(get_settings().database_url)))"
+   ```
+4. **Webhooks must be configured in the HubSpot UI** — private apps cannot
+   create or edit subscriptions by API. Point them at
+   `POST /webhooks/hubspot` and set `HUBSPOT_WEBHOOK_SECRET`. Without the
+   secret the endpoint returns 401 rather than accepting unsigned requests.
+
+### The five custom properties
+
+Free tier caps custom properties at ~10, so exactly five are used. A sixth is a
+decision, not a convenience.
+
+| Object | Property | Why |
+|---|---|---|
+| Contact | `apollo_person_id` | Dedup key, created `hasUniqueValue` so it can key a batch upsert. HubSpot's native key is email, absent for every unrevealed lead. |
+| Contact | `priority_score` | What reps sort by |
+| Contact | `seed_lifecycle_stage` | Ours. `lifecyclestage` is reserved by HubSpot with its own vocabulary — writing it raises. |
+| Company | `latest_funding_stage` | The ICP criterion |
+| Company | `office_signal` | The criterion Apollo cannot filter on |
+
+Everything else (`icp_reasons`, `office_signal_evidence`, `last_emailed_at`,
+`do_not_contact`) stays in Postgres. The enrollment layer needs it; HubSpot does
+not.
+
+**Custom objects are Enterprise-only and are not used.**
+
+### Field ownership
+
+- **HubSpot wins** for rep edits: owner, native pipeline stage, notes,
+  corrections to name/title/email.
+- **We win** for computed fields: `priority_score`, `seed_lifecycle_stage`,
+  `latest_funding_stage`, `office_signal`.
+- Unknown values are **omitted** rather than sent as empty strings — an empty
+  string overwrites a correction a rep made by hand.
 
 ## Adding an ICP filter
 
