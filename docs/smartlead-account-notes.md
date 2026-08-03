@@ -33,8 +33,14 @@ Write-side quirks, all found the hard way:
 
 ## The three campaigns
 
+> **Deleted 2026-08-03**, once their replacements were built and verified.
+> Nothing here is recoverable from Smartlead. The record is in this repo:
+> settings and sequences in `docs/smartlead-export/`, all 33 leads with their
+> custom fields in `docs/smartlead-export/_deleted-campaigns-leads.json`.
+> The conventions below are still the house style the live campaigns follow.
+
 `FINAL Qualifiers 1` (3650607), `2` (3650609), `3` (3650610). Created within ~7
-seconds of each other on 2026-07-16, all still **DRAFTED**, nothing ever sent.
+seconds of each other on 2026-07-16, never sent, all still DRAFTED at deletion.
 
 They are three angles on one motion, not three campaigns:
 
@@ -127,7 +133,30 @@ Two domains: `@getaudria.com` (9) and `@audriahq.com` (9).
 At 18 mailboxes × 15/day the ceiling is 270/day, while campaigns cap at 10
 leads/day. The mailbox pool is sized far beyond current campaign config.
 
-## Four things to fix before anything sends
+## Live campaigns
+
+Built from `docs/sequences/*.json` via `scripts/smartlead_create_campaign.py`.
+All DRAFTED; none has sent.
+
+| ID | Name | Spec |
+|---|---|---|
+| 3754206 | Follow-Through Story | `sequence-1.json` |
+| 3754247 | The Memory Story | `sequence-2.json` |
+| 3754252 | The AI Org Story | `sequence-3.json` |
+
+11 leads each, `abhiraj@getaudria.com` attached (signature `Abhiraj`), steps at
+day 0 / +3 / +7, open and click tracking disabled. Step 1 carries no link and
+asks for a reply; steps 2 and 3 link the App Store from words inside the
+sentence rather than a trailing branded anchor.
+
+Still outstanding: the short variant of step 3 (currently the long version goes
+to everyone, with no A/B split), and a test send to confirm `%signature%`
+resolves rather than printing literally.
+
+## Four things found in the deleted campaigns
+
+Kept because they are easy to reintroduce. The first two are already fixed in
+the live campaigns; the last two were deliberate divergences.
 
 1. **No mailboxes are attached to any campaign.** All three return zero from
    `campaigns/{id}/email-accounts`. This alone blocks sending, and is likely why
