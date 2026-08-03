@@ -1,0 +1,109 @@
+{
+  "id": 3650607,
+  "name": "FINAL Qualifiers 1",
+  "list_entry": {
+    "id": 3650607,
+    "user_id": 589148,
+    "created_at": "2026-07-16T10:37:04.883Z",
+    "updated_at": "2026-08-03T07:00:21.079Z",
+    "status": "DRAFTED",
+    "name": "FINAL Qualifiers 1",
+    "track_settings": [],
+    "scheduler_cron_value": {
+      "tz": "America/Los_Angeles",
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "endHour": "11:30",
+      "startHour": "09:30"
+    },
+    "min_time_btwn_emails": 10,
+    "max_leads_per_day": 10,
+    "stop_lead_settings": "REPLY_TO_AN_EMAIL",
+    "schedule_start_time": null,
+    "enable_ai_esp_matching": false,
+    "send_as_plain_text": false,
+    "follow_up_percentage": 100,
+    "unsubscribe_text": null,
+    "parent_campaign_id": null,
+    "client_id": null,
+    "campaign_activity_logs": {}
+  },
+  "settings": {
+    "id": 3650607,
+    "user_id": 589148,
+    "created_at": "2026-07-16T10:37:04.883Z",
+    "updated_at": "2026-08-03T07:00:21.079Z",
+    "status": "DRAFTED",
+    "name": "FINAL Qualifiers 1",
+    "track_settings": [],
+    "scheduler_cron_value": {
+      "tz": "America/Los_Angeles",
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "endHour": "11:30",
+      "startHour": "09:30"
+    },
+    "min_time_btwn_emails": 10,
+    "max_leads_per_day": 10,
+    "stop_lead_settings": "REPLY_TO_AN_EMAIL",
+    "schedule_start_time": null,
+    "enable_ai_esp_matching": false,
+    "send_as_plain_text": false,
+    "follow_up_percentage": 100,
+    "unsubscribe_text": null,
+    "parent_campaign_id": null,
+    "client_id": null
+  },
+  "sequences": [
+    {
+      "id": 9657971,
+      "created_at": "2026-07-16T10:46:33.370Z",
+      "updated_at": "2026-07-16T12:32:41.522Z",
+      "email_campaign_id": 3650607,
+      "seq_number": 1,
+      "seq_delay_details": {
+        "delayInDays": 0
+      },
+      "subject": "the things you agreed to this week",
+      "email_body": "<p>Hi {{first_name}},</p><p>Most of what you commit to in a week is never written down anywhere. You said it out loud, at someone's desk, in the corridor after standup, over coffee with the laptop shut. By Thursday, half of it is gone.</p><p>Audria is an ambient voice AI. It listens through your working day and catches all of it. By the time you are back at your desk, the email is written, the Jira ticket is filed, and the team already knows.</p><p>And it adds up. Months of thinking out loud, and you can finally see your idea's whole evolution, every pivot, laid out in front of you.</p><p>Early access opens next week, first hundred get three months free. Want a spot? <a href=\"https://forms.gle/u9ceJKnBgDN5FuNE8\">https://forms.gle/u9ceJKnBgDN5FuNE8</a></p><p>%signature%</p>",
+      "sequence_variants": null
+    },
+    {
+      "id": 9657972,
+      "created_at": "2026-07-16T10:46:33.370Z",
+      "updated_at": "2026-07-16T12:32:41.522Z",
+      "email_campaign_id": 3650607,
+      "seq_number": 2,
+      "seq_delay_details": {
+        "delayInDays": 3
+      },
+      "subject": "",
+      "email_body": "<p>Hi {{first_name}}, one thought and then I will leave it.</p><p>Nearly every meeting tool needs you to press record, so it only ever sees what is on your calendar. The desk conversation, the corridor, the coffee, none of it gets caught. That is most of a founder's day.</p><p>That is the gap Audria exists for. A spot on the early access list is here if it is useful: <a href=\"https://forms.gle/u9ceJKnBgDN5FuNE8\">https://forms.gle/u9ceJKnBgDN5FuNE8</a></p><p>%signature%</p>",
+      "sequence_variants": null
+    },
+    {
+      "id": 9657973,
+      "created_at": "2026-07-16T10:46:33.370Z",
+      "updated_at": "2026-07-16T12:32:41.522Z",
+      "email_campaign_id": 3650607,
+      "seq_number": 3,
+      "seq_delay_details": {
+        "delayInDays": 4
+      },
+      "subject": "900 comments about meeting tools",
+      "email_body": "<p>Hi {{first_name}}, last one from me.</p><p>Before we wrote any positioning, I read about 900 comments from people using AI meeting tools. Three things stood out.</p><p>One. Transcription is finished as a business. Around a hundred apps, prices collapsing toward zero. One person did 60 meetings for under two dollars with a pipeline he built himself.</p><p>Two. Summaries tell you what was discussed, not who is on the hook. Two people asked whether any tool could pull the actual commitments out of a meeting without a human cleaning up afterwards. Both got zero replies, in threads full of vendors.</p><p>Three. Nearly everything needs you to press record. And even the always-on tools stop at transcripts. Nothing comes back with the work done.</p><p>Audria answers all three, and the third is why it exists. No record button, and what comes back is the email drafted and the ticket filed.</p><p>A spot here if it is useful: <a href=\"https://forms.gle/u9ceJKnBgDN5FuNE8\">https://forms.gle/u9ceJKnBgDN5FuNE8</a></p><p>%signature%</p>",
+      "sequence_variants": null
+    }
+  ],
+  "email_accounts": []
+}

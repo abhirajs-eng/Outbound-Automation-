@@ -1,86 +1,141 @@
-# Smartlead account — observed conventions
+# Smartlead account — conventions and house style
 
-Captured 2026-08-03 from a single successful `GET /api/v1/campaigns` call before
-the account's plan lapsed. **Facts observed from the account only** — no inferred
-best practices. Sequence bodies and signatures are not in here because the
-endpoints that serve them were already returning `Plan expired!` (see below).
+Pulled live 2026-08-03 via `scripts/smartlead_dump.py`. Raw export in
+`docs/smartlead-export/`. This file is the readable version: how the existing
+campaigns are built, so new sequences can match.
 
-## Access status
+## Access
 
-The `SMARTLEAD_API_KEY` in the environment is **valid** — it returned real
-account data once. Every call after that returns `HTTP 401 {"message":"Plan
-expired!"}`, including a verbatim repeat of the call that succeeded. This is a
-billing state, not an auth problem.
-
-Verified while probing:
+Working. `SMARTLEAD_API_KEY` in the environment authenticates against
+`https://server.smartlead.ai/api/v1`.
 
 - Auth is **query param only** (`?api_key=…`). `Authorization: Bearer` and
-  `x-api-key` headers both return `API key is required.`
-- Base host is `server.smartlead.ai`. `api.smartlead.ai` is not reachable from
-  this environment (proxy returns 403 on CONNECT).
-- Cloudflare fronts the API and 403s any request with urllib's default
-  user-agent (`error code: 1010`). Send an ordinary UA.
+  `x-api-key` are both rejected with `API key is required.`
+- The API **rejects unknown query params** with a 400 (`"_cb" is not allowed`),
+  so cache-busters can't be added. Note this: a proxy between here and Smartlead
+  caches GETs, and a stale hit is indistinguishable from a live one by status
+  code alone. Verify freshness by content, not by HTTP 200.
+- Cloudflare 403s urllib's default user-agent (`error code: 1010`). Send an
+  ordinary UA — the dumper does.
+- `api.smartlead.ai` is not reachable from this environment; use
+  `server.smartlead.ai`.
 
-Blocked endpoints (all `401 Plan expired!`): `campaigns`, `campaigns/{id}`,
-`campaigns/{id}/sequences`, `campaigns/{id}/email-accounts`,
-`campaigns/{id}/statistics`, `email-accounts`, `client/`.
+## The three campaigns
 
-## Campaigns
+`FINAL Qualifiers 1` (3650607), `2` (3650609), `3` (3650610). Created within ~7
+seconds of each other on 2026-07-16, all still **DRAFTED**, nothing ever sent.
 
-Three campaigns, all created within ~7 seconds of each other on 2026-07-16,
-all still `DRAFTED` — nothing has ever sent.
+They are three angles on one motion, not three campaigns:
 
-| ID | Name | Status |
+| | Step 1 hook | Angle |
 |---|---|---|
-| 3650607 | FINAL Qualifiers 1 | DRAFTED |
-| 3650609 | FINAL Qualifiers 2 | DRAFTED |
-| 3650610 | FINAL Qualifiers 3 | DRAFTED |
+| **1** | "the things you agreed to this week" | Commitments lost during the day |
+| **2** | "what you decided three weeks ago" | Decisions/reasoning lost over months |
+| **3** | "does ChatGPT know {{company_name}}?" | Your AI can't see what wasn't written down |
 
-The near-identical timestamps and the `Qualifiers 1/2/3` naming suggest three
-parallel variants of one motion rather than three independent campaigns.
-Unconfirmed until the sequences are readable.
+Step 3 is shared near-verbatim across all three (the "900 comments" teardown),
+with Campaign 1 and 2 running an identical condensed version and Campaign 3 a
+longer one. So the variation is concentrated in steps 1–2; the closer is fixed.
 
-## Settings — identical across all three
+## Sequence structure — identical in all three
 
-This is the house pattern; a new campaign should match it unless there's a
-reason to diverge.
+Three steps, `0 / +3 / +4` days:
 
-| Setting | Value | Reading |
-|---|---|---|
-| `scheduler_cron_value.tz` | `America/Los_Angeles` | |
-| `scheduler_cron_value.days` | `[1,2,3,4,5]` | Weekdays only |
-| `startHour` / `endHour` | `09:30` → `11:30` | A 2-hour morning window |
-| `max_leads_per_day` | `10` | Deliberately low volume |
-| `min_time_btwn_emails` | `10` | Minutes — ~12 sends/hr ceiling |
-| `stop_lead_settings` | `REPLY_TO_AN_EMAIL` | Stops the sequence on any reply |
-| `follow_up_percentage` | `100` | All leads get follow-ups |
-| `send_as_plain_text` | `false` | HTML send |
-| `enable_ai_esp_matching` | `false` | |
-| `track_settings` | `[]` | **Open and click tracking both on** |
-| `unsubscribe_text` | `null` | No unsubscribe footer set |
-| `client_id` / `parent_campaign_id` | `null` | Not whitelabelled, not a subcampaign |
+| Step | Delay | Subject | Length | Job |
+|---|---|---|---|---|
+| 1 | day 0 | lowercase, specific | ~5 short paragraphs | Problem → product → proof → CTA |
+| 2 | +3 days | **empty** | ~3 paragraphs | One idea, then out |
+| 3 | +4 days | lowercase | ~7 paragraphs | Research teardown, longest of the three |
 
-Two notes on that table, since both are load-bearing and neither is settled:
+**Step 2's subject is an empty string on purpose** — that makes Smartlead send it
+as a reply on the existing thread rather than a new email. Keep this. It's the
+single most important structural convention here.
 
-- `track_settings: []` means nothing is disabled — open and click tracking are
-  **on**. Open tracking injects a pixel and click tracking rewrites links, both
-  of which cost deliverability. The empty array is a default, so this reads as
-  never-configured rather than chosen.
-- The 10 leads/day cap and reply-stop pair cleanly with the volume argument in
-  `daily/2026-07-28.md` ("40 emails/day, 2% reply → 12/day hand-checked, 19%").
-  Consistent with the stated thesis.
+No variants anywhere (`seq_variants: []`, `variant_distribution_type: null`). No
+A/B testing configured. No spintax.
 
-## Not yet known
+## Voice rules, as practised
 
-Everything about the actual writing. Sequence step count and delays, subject
-lines, body copy, spintax, variant/A-B structure, personalisation variables,
-signature block and whether it's per-sequence or per-mailbox, sending mailboxes,
-domains, and warmup health.
+Consistent enough across nine emails to treat as house style:
 
-## Refreshing this file
+- **Lowercase subjects**, no title case, no punctuation. Fragments, not
+  sentences: `the things you agreed to this week`.
+- **No em-dashes anywhere in nine emails.** Sentences are split with full stops
+  instead. Deliberate — match it.
+- **Numbered points are spelled out as sentences** — "One. Transcription is
+  finished as a business." Never `1.` or bullets. Every body is `<p>` tags only:
+  no lists, no bold, no headers.
+- **Openers name the reader's situation, never the sender.** No email begins
+  with "I'm the founder of…". The product arrives in paragraph 2 or 3.
+- **Follow-ups announce their own end**: "one thought and then I will leave it",
+  "last one from me". Both steps 2 and 3 do this.
+- **Contractions are avoided** — "I will", "it is", "does not", "you are".
+  Uniform across all nine.
+- **Concrete numbers over adjectives**: "900 comments", "60 meetings for under
+  two dollars", "around a hundred of these apps", "first hundred get three
+  months free".
+- **One CTA, same link every time**
+  (`https://forms.gle/u9ceJKnBgDN5FuNE8`), phrased softly on follow-ups: "a spot
+  on the early access list is here if it is useful".
+- Personalisation is only `{{first_name}}` and `{{company_name}}`. Nothing
+  deeper — no custom variables, no lead-level fields.
 
-    export SMARTLEAD_API_KEY=…
+## Signature
+
+Every one of the nine steps ends with `<p>%signature%</p>`. The signature is not
+in the sequence; Smartlead substitutes it per sending mailbox. So the sequence
+body is mailbox-agnostic and the signature is configured on the email account.
+
+**This is currently broken — see below.**
+
+## Campaign settings — identical in all three
+
+The house pattern. Match it unless there's a reason not to.
+
+| Setting | Value |
+|---|---|
+| `scheduler_cron_value.tz` | `America/Los_Angeles` |
+| `days` | `[1,2,3,4,5]` — weekdays |
+| `startHour` → `endHour` | `09:30` → `11:30` |
+| `max_leads_per_day` | `10` |
+| `min_time_btwn_emails` | `10` (minutes) |
+| `stop_lead_settings` | `REPLY_TO_AN_EMAIL` |
+| `follow_up_percentage` | `100` |
+| `send_as_plain_text` | `false` |
+| `track_settings` | `[]` |
+| `unsubscribe_text` | `null` |
+
+## Mailboxes
+
+18 connected, all `warmup_status: ACTIVE`, reputation 99–100%, SMTP and IMAP
+both verified, `message_per_day: 15`, and **`total_sent_count: 0`** — warmed but
+never used for real sending.
+
+Two domains: `@getaudria.com` (9) and `@audriahq.com` (9).
+
+At 18 mailboxes × 15/day the ceiling is 270/day, while campaigns cap at 10
+leads/day. The mailbox pool is sized far beyond current campaign config.
+
+## Four things to fix before anything sends
+
+1. **No mailboxes are attached to any campaign.** All three return zero from
+   `campaigns/{id}/email-accounts`. This alone blocks sending, and is likely why
+   they're still DRAFTED.
+2. **15 of 18 mailboxes have `signature: null`**, yet all nine steps end in
+   `%signature%`. Only `charles@`, `savannah@`, and `kelly@` have one, and each
+   is a bare first name (`'Charles'`). If a null-signature mailbox sends, that
+   token resolves to nothing and leaves a stray empty paragraph — or worse,
+   renders literally. Set signatures on every mailbox that will send, or drop
+   the token.
+3. **`track_settings: []` means open and click tracking are both ON.** Nothing
+   is disabled. The pixel and link rewriting both cost deliverability, and at 10
+   leads/day there is no volume to spare. This is an unset default, not a
+   choice — worth making it one.
+4. **`unsubscribe_text: null`** — no unsubscribe footer on any campaign. Decide
+   this deliberately before the first send.
+
+## Refreshing
+
     python3 scripts/smartlead_dump.py --out docs/smartlead-export
 
-Dumps settings + sequences + mailboxes per campaign. Read-only. Currently exits
-non-zero on the expired plan; it will run clean once the subscription renews.
+Read-only; makes no writes to the account. The export carries no credentials.

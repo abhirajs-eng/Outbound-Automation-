@@ -1,0 +1,109 @@
+{
+  "id": 3650610,
+  "name": "FINAL Qualifiers 3",
+  "list_entry": {
+    "id": 3650610,
+    "user_id": 589148,
+    "created_at": "2026-07-16T10:37:11.507Z",
+    "updated_at": "2026-08-03T07:00:21.079Z",
+    "status": "DRAFTED",
+    "name": "FINAL Qualifiers 3",
+    "track_settings": [],
+    "scheduler_cron_value": {
+      "tz": "America/Los_Angeles",
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "endHour": "11:30",
+      "startHour": "09:30"
+    },
+    "min_time_btwn_emails": 10,
+    "max_leads_per_day": 10,
+    "stop_lead_settings": "REPLY_TO_AN_EMAIL",
+    "schedule_start_time": null,
+    "enable_ai_esp_matching": false,
+    "send_as_plain_text": false,
+    "follow_up_percentage": 100,
+    "unsubscribe_text": null,
+    "parent_campaign_id": null,
+    "client_id": null,
+    "campaign_activity_logs": {}
+  },
+  "settings": {
+    "id": 3650610,
+    "user_id": 589148,
+    "created_at": "2026-07-16T10:37:11.507Z",
+    "updated_at": "2026-08-03T07:00:21.079Z",
+    "status": "DRAFTED",
+    "name": "FINAL Qualifiers 3",
+    "track_settings": [],
+    "scheduler_cron_value": {
+      "tz": "America/Los_Angeles",
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "endHour": "11:30",
+      "startHour": "09:30"
+    },
+    "min_time_btwn_emails": 10,
+    "max_leads_per_day": 10,
+    "stop_lead_settings": "REPLY_TO_AN_EMAIL",
+    "schedule_start_time": null,
+    "enable_ai_esp_matching": false,
+    "send_as_plain_text": false,
+    "follow_up_percentage": 100,
+    "unsubscribe_text": null,
+    "parent_campaign_id": null,
+    "client_id": null
+  },
+  "sequences": [
+    {
+      "id": 9658787,
+      "created_at": "2026-07-16T11:38:42.152Z",
+      "updated_at": "2026-07-16T12:33:01.851Z",
+      "email_campaign_id": 3650610,
+      "seq_number": 1,
+      "seq_delay_details": {
+        "delayInDays": 0
+      },
+      "subject": "does ChatGPT know {{company_name}}?",
+      "email_body": "<p>Hi {{first_name}},</p><p>Your team talks all day. Most decisions happen in those conversations, and almost nothing from them gets written down. So when you ask ChatGPT or Claude anything about your company, it answers from the few docs and tickets someone typed. It knows nothing about the rest.</p><p>Audria is an ambient voice AI. It listens through your working day and captures every conversation. Every decision, every commitment, every reason behind them. Your AI finally gets all of it. Ask it why the roadmap changed in March and it actually knows.</p><p>Audria also acts on what it hears. Before you are back at your desk, the email is written, the Jira ticket is filed, and the team already knows.</p><p>Early access opens next week, first hundred get three months free. Want a spot? <a href=\"https://forms.gle/u9ceJKnBgDN5FuNE8\">https://forms.gle/u9ceJKnBgDN5FuNE8</a></p><p>%signature%</p>",
+      "sequence_variants": null
+    },
+    {
+      "id": 9658788,
+      "created_at": "2026-07-16T11:38:42.152Z",
+      "updated_at": "2026-07-16T12:33:01.851Z",
+      "email_campaign_id": 3650610,
+      "seq_number": 2,
+      "seq_delay_details": {
+        "delayInDays": 3
+      },
+      "subject": "",
+      "email_body": "<p>Hi {{first_name}}, one thought and then I will leave it.</p><p>Every company now uses the same AI models. The edge is what yours gets to see. For most companies that is docs and tickets, the small part that got written down. Everything decided out loud never reaches it.</p><p>That is the gap Audria closes. A spot on the early access list is here if it is useful: <a href=\"https://forms.gle/u9ceJKnBgDN5FuNE8\">https://forms.gle/u9ceJKnBgDN5FuNE8</a></p><p>%signature%</p>",
+      "sequence_variants": null
+    },
+    {
+      "id": 9658789,
+      "created_at": "2026-07-16T11:38:42.152Z",
+      "updated_at": "2026-07-16T12:33:01.851Z",
+      "email_campaign_id": 3650610,
+      "seq_number": 3,
+      "seq_delay_details": {
+        "delayInDays": 4
+      },
+      "subject": "what I learned reading 900 comments about AI meeting tools",
+      "email_body": "<p>Hi {{first_name}}, last one from me.</p><p>Before we wrote a line of positioning, I read about 900 comments from people using AI meeting tools. Three things stood out.</p><p>One. Transcription is finished as a business. Someone in those threads transcribed 60 meetings for under two dollars with a pipeline he built himself. There are around a hundred of these apps and prices are collapsing toward zero.</p><p>Two. Summaries tell you what was discussed, not who is on the hook. Two separate people asked whether any tool could pull the actual commitments out of a meeting, the \"I will send it by Thursday\" moments, without a human cleaning it up afterwards. In threads full of vendors, both questions got zero replies.</p><p>Three. Nearly everything needs you to press record. A few wearables and one second-brain app listen all day, but every meeting tool people actually recommended only sees the meetings you chose to capture. And even the always-on ones stop at transcripts and summaries. Nothing comes back with the work done.</p><p>Audria answers all three. Transcription is in there as table stakes. Every action it drafts names who said they would do what, with the exact line from the conversation as proof. And there is no record button. It hears the whole day like the always-on tools do, but what comes back is not a memory bank. It is the email drafted and the ticket filed. Nobody else has that combination.</p><p>A spot on the early access list is here if it is useful: <a href=\"https://forms.gle/u9ceJKnBgDN5FuNE8\">https://forms.gle/u9ceJKnBgDN5FuNE8</a></p><p>%signature%</p>",
+      "sequence_variants": null
+    }
+  ],
+  "email_accounts": []
+}
