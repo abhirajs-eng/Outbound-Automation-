@@ -86,6 +86,7 @@ def _capacity_report() -> capacity_mod.CapacityReport:
     return capacity_mod.compute(
         domains=len(settings.capacity.domains),
         mailboxes_per_domain=settings.capacity.mailboxes_per_domain,
+        total_mailboxes=settings.capacity.total_mailboxes,
         sends_per_mailbox_day=settings.capacity.sends_per_mailbox_day,
         sequence_steps=DEFAULT_SEQUENCE_STEPS,
         sourcing_target=settings.daily_sourcing_target,
@@ -98,6 +99,8 @@ def capacity() -> dict:
     report = _capacity_report()
     return {
         "configured": report.configured,
+        "mailboxes": report.mailbox_count,
+        "domains": report.domains,
         "emails_per_day": report.emails_per_day,
         "sustainable_enrollments_per_day": report.sustainable_enrollments_per_day,
         "sourcing_target": report.sourcing_target,

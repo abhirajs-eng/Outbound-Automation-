@@ -76,7 +76,38 @@ This turned out to be useful rather than awkward: `docs/audria-x-growth-operatin
 from it) and it matches spec §4. `config/icp.yaml` is now the single definition
 both systems read, rather than a second copy that drifts.
 
-### 3. Section 0 was left unfilled
+### 3. Capacity is expressed as a mailbox count, not domains × per-domain
+
+**Spec (§6):** `domains × mailboxes × sends_per_mailbox_day`.
+
+**Actual configuration (confirmed with the operator, 2026-08-03):** 2 sending
+domains, **18 mailboxes total**. That is 9 and 9 only if nobody has ever moved
+one, and the product form silently encodes that assumption.
+
+**Built:** `TOTAL_MAILBOXES` takes precedence over `MAILBOXES_PER_DOMAIN`. The
+product form still works and the spec's worked example still yields 45/day.
+From Phase 5 the count will come from Smartlead's `GET /email-accounts` rather
+than from `.env` at all — a real count beats a configured one.
+
+**What this changes strategically:** at 30 sends/mailbox/day, 18 mailboxes give
+540 emails/day ÷ 4 steps = **135 sustainable enrollments/day**. The spec's worry
+— a 100/day sourcing target against 45/day capacity building ~1,650 unmailable
+leads a month — **does not apply here.** 100/day is comfortably within capacity
+(35/day of slack).
+
+The binding constraint moves elsewhere: 18 mailboxes at 135 leads/day needs
+roughly **340–470 Apollo credits/day** for stage enrichment and email reveal at
+a 25–40% hit rate. Sourcing volume is an Apollo spend question, not a send
+capacity question. Recorded here so the daily target is set against the right
+number.
+
+**Warm-up caveat, not yet resolved:** if these 18 mailboxes are new, 30/day each
+from day one will burn them. Cold mailboxes want ~10/day ramping over 3–4 weeks,
+which is 45 leads/day initially — back at the spec's figure. `mailboxes.status`
+carries a `warming` value and `warmup_started_at` for this; whether the ramp is
+needed is a question for the operator before Phase 5.
+
+### 4. Section 0 was left unfilled
 
 Sourced from the existing operating doc (real, not guessed):
 
@@ -89,6 +120,26 @@ Sourced from the existing operating doc (real, not guessed):
 `MAILBOXES_PER_DOMAIN`, `SENDS_PER_MAILBOX_DAY`, `HUBSPOT_PORTAL_ID`,
 `DRIVE_SEQUENCE_FOLDER`. `/capacity` reports `not_configured` rather than a
 fabricated number, and `Settings.require_physical_address()` raises.
+
+---
+
+### 5. Signal provider: manual only
+
+**Chosen by the operator, 2026-08-03.** There is no official API for searching
+public LinkedIn posts; every route is a scraper or a reseller of one, and
+routing via a third-party actor moves the mechanics of the ToS breach, not the
+breach. Manual paste-in works from day one, costs nothing, and carries no risk.
+
+The `SignalProvider` interface still defines `x_api` and `apify` so either can
+be added later without rework. The Apify provider **refuses to load without an
+explicitly configured `APIFY_ACTOR_ID`** — verified: `load_settings()` raises
+when `SIGNAL_PROVIDER=apify` and no actor id is set. A token alone can never
+self-enable scraping.
+
+This is also consistent with the reasoning already recorded in
+`docs/audria-x-growth-operating-doc.md` §8: Audria is a trust product sold to
+founders in a small, well-connected market, and the commercial cost of being
+identified as running a scraper exceeds the value of the signals.
 
 ---
 

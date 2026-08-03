@@ -89,15 +89,26 @@ Full list with commentary in `.env.example`. The ones that block work when absen
 ## Capacity arithmetic
 
 ```
-send capacity               = domains × mailboxes × sends_per_mailbox_day
+send capacity               = mailboxes × sends_per_mailbox_day
 a 4-step sequence consumes 4 emails per lead
 sustainable enrollments/day = capacity ÷ steps
 ```
 
-2 domains × 3 mailboxes × 30/day = 180 emails/day ÷ 4 steps ≈ **45 new
-leads/day**. A 100/day sourcing target against that builds ~1,650 unmailable
-leads a month, which then decay. `/capacity` surfaces the gap and names it
-`oversourcing`.
+**Current configuration: 2 domains, 18 mailboxes.** At 30 sends/mailbox/day that
+is 540 emails/day ÷ 4 steps = **135 sustainable enrollments/day** — so a 100/day
+sourcing target sits comfortably inside capacity, with 35/day of slack.
+
+Set `TOTAL_MAILBOXES` rather than `MAILBOXES_PER_DOMAIN` when mailboxes are not
+split evenly across domains. `/capacity` reports `oversourcing` when the daily
+target exceeds what can be mailed.
+
+Two things this does *not* say:
+
+- **If the 18 mailboxes are new, 30/day each will burn them.** Cold mailboxes
+  want ~10/day ramping over 3–4 weeks — which is 45 leads/day to start with.
+- **The binding constraint is Apollo credits, not send capacity.** 135 leads/day
+  needs roughly 340–470 credits/day for stage enrichment and email reveal at a
+  25–40% hit rate. Set the daily target against that number.
 
 ## Running jobs
 

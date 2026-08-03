@@ -20,6 +20,10 @@ class CapacityReport:
     configured: bool
     domains: int
     mailboxes_per_domain: int | None
+    #: Authoritative when set. Mailboxes are rarely split evenly across domains
+    #: -- 18 across 2 is 9 and 9 only if nobody moved one -- so a real count
+    #: beats an inferred product.
+    total_mailboxes: int | None
     sends_per_mailbox_day: int | None
     sequence_steps: int
     emails_per_day: int | None
@@ -50,16 +54,24 @@ class CapacityReport:
         surplus = self.surplus_per_day or 0
         return "oversourcing" if surplus > 0 else "healthy"
 
+    @property
+    def mailbox_count(self) -> int | None:
+        if self.total_mailboxes is not None:
+            return self.total_mailboxes
+        if self.domains and self.mailboxes_per_domain is not None:
+            return self.domains * self.mailboxes_per_domain
+        return None
+
     def summary(self) -> str:
         if not self.configured:
             # Never a fabricated number. The dashboard says what is missing.
             return (
                 "Send capacity is not configured. Set SENDING_DOMAINS, "
-                "MAILBOXES_PER_DOMAIN and SENDS_PER_MAILBOX_DAY in .env "
-                "before enabling daily sourcing."
+                "SENDS_PER_MAILBOX_DAY and either TOTAL_MAILBOXES or "
+                "MAILBOXES_PER_DOMAIN in .env before enabling daily sourcing."
             )
         base = (
-            f"{self.domains} domains x {self.mailboxes_per_domain} mailboxes "
+            f"{self.mailbox_count} mailboxes across {self.domains} domains "
             f"x {self.sends_per_mailbox_day}/day = {self.emails_per_day} emails/day "
             f"/ {self.sequence_steps} steps "
             f"= {self.sustainable_enrollments_per_day} new leads/day"
@@ -79,26 +91,32 @@ class CapacityReport:
 def compute(
     *,
     domains: int,
-    mailboxes_per_domain: int | None,
+    mailboxes_per_domain: int | None = None,
+    total_mailboxes: int | None = None,
     sends_per_mailbox_day: int | None,
     sequence_steps: int,
     sourcing_target: int | None = None,
 ) -> CapacityReport:
+    """`total_mailboxes` wins over `mailboxes_per_domain` when both are given."""
     if sequence_steps <= 0:
         raise ValueError("sequence_steps must be positive")
 
-    configured = bool(
-        domains and mailboxes_per_domain is not None and sends_per_mailbox_day is not None
-    )
-    emails = (
-        domains * mailboxes_per_domain * sends_per_mailbox_day if configured else None
-    )
+    if total_mailboxes is not None:
+        mailboxes = total_mailboxes
+    elif domains and mailboxes_per_domain is not None:
+        mailboxes = domains * mailboxes_per_domain
+    else:
+        mailboxes = None
+
+    configured = bool(domains and mailboxes and sends_per_mailbox_day is not None)
+    emails = mailboxes * sends_per_mailbox_day if configured else None
     enrollments = emails // sequence_steps if emails is not None else None
 
     return CapacityReport(
         configured=configured,
         domains=domains,
         mailboxes_per_domain=mailboxes_per_domain,
+        total_mailboxes=total_mailboxes,
         sends_per_mailbox_day=sends_per_mailbox_day,
         sequence_steps=sequence_steps,
         emails_per_day=emails,

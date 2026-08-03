@@ -45,13 +45,24 @@ class SendingCapacity:
 
     domains: list[str] = field(default_factory=list)
     mailboxes_per_domain: int | None = None
+    #: Real count, when mailboxes are not split evenly across domains.
+    #: Takes precedence over mailboxes_per_domain.
+    total_mailboxes: int | None = None
     sends_per_mailbox_day: int | None = None
+
+    @property
+    def mailbox_count(self) -> int | None:
+        if self.total_mailboxes is not None:
+            return self.total_mailboxes
+        if self.domains and self.mailboxes_per_domain is not None:
+            return len(self.domains) * self.mailboxes_per_domain
+        return None
 
     @property
     def configured(self) -> bool:
         return bool(
             self.domains
-            and self.mailboxes_per_domain is not None
+            and self.mailbox_count
             and self.sends_per_mailbox_day is not None
         )
 
@@ -59,11 +70,7 @@ class SendingCapacity:
     def emails_per_day(self) -> int | None:
         if not self.configured:
             return None
-        return (
-            len(self.domains)
-            * int(self.mailboxes_per_domain)
-            * int(self.sends_per_mailbox_day)
-        )
+        return int(self.mailbox_count) * int(self.sends_per_mailbox_day)
 
     def enrollments_per_day(self, sequence_steps: int) -> int | None:
         """A 4-step sequence consumes 4 emails per lead."""
@@ -191,6 +198,7 @@ def load_settings(dotenv: Path | None = None) -> Settings:
         capacity=SendingCapacity(
             domains=_split_csv(os.environ.get("SENDING_DOMAINS")),
             mailboxes_per_domain=_int_or_none(os.environ.get("MAILBOXES_PER_DOMAIN")),
+            total_mailboxes=_int_or_none(os.environ.get("TOTAL_MAILBOXES")),
             sends_per_mailbox_day=_int_or_none(
                 os.environ.get("SENDS_PER_MAILBOX_DAY")
             ),
