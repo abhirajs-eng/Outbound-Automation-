@@ -65,6 +65,44 @@ from, and recovery takes weeks.
 being sent. Check the unsubscribe link works — a broken unsubscribe converts
 opt-outs into complaints. Do not resume without a copy change.
 
+### Apollo credits running out — the constraint that actually binds
+
+**Check first, every run:** `apollo_usage_stats_credit_usage_stats` gives credits
+left and the cycle end date.
+
+```
+sustainable leads/day = credits_left / days_left_in_cycle / ~3
+```
+
+~3 credits per mailable lead = one email reveal plus stage enrichment across the
+companies that fail the check. **This is roughly 30/day against a send capacity
+of 135/day** — so the mailboxes are idle, not the leads backed up.
+
+**Do not respond by sourcing at send capacity.** That burns a full monthly
+allowance in about five days and leaves three weeks with nothing to mail. If
+credits run out mid-cycle:
+
+1. Stop enriching and revealing. **Sourcing itself is free** — keep persisting
+   stage-unknown leads, they cost nothing and are ready when credits return.
+2. Existing campaigns keep sending. Nothing in flight depends on credits.
+3. Decide deliberately: raise the Apollo plan, or accept the lower rate.
+   Shortening the sequence raises send capacity but not the credit line, so it
+   does not help here.
+
+**If the ICP hit rate drifts, recompute the ~3 figure** rather than reusing it.
+A lower hit rate means more companies enriched per qualified lead.
+
+### Apollo search returns fewer new leads each run
+
+Almost always facet exhaustion, not an outage. The standard ICP filter set
+returns **49,416 results against a hard 50,000 cap** — it is at 99% of the
+ceiling from day one.
+
+Check `source_cursors` for `pages_exhausted = true`. The fix is rotating a facet
+(keyword tag, employee range, founded-year band), not retrying and not widening
+filters. Silent widening is how the lead list fills with people nobody wants to
+email.
+
 ### Apollo returns nothing
 
 **Not automatically an incident.** Work through in order:

@@ -5,9 +5,20 @@ Two systems, one repo:
 | | What it does | Where |
 |---|---|---|
 | **[GTM outbound](#gtm-outbound)** | Sources ICP founders from Apollo, syncs them to HubSpot, sends sequences through Smartlead, measures what works | `app/`, `migrations/`, `config/` |
-| **[X/Twitter growth](#xtwitter-growth)** | Daily research and a paste-ready comment queue; a human does all posting | `docs/`, `daily/`, `.claude/skills/` |
+| **[X/Twitter growth](#xtwitter-growth)** | Daily research and a paste-ready comment queue; a human does all posting | `docs/`, `daily/` |
 
 They share one ICP definition (`config/icp.yaml`) and nothing else.
+
+## Running either one
+
+```
+/gtm-outbound     source, qualify, sync, build a campaign, pull stats
+/audria-daily     research ICP founders, build the X execution queue
+```
+
+`/gtm-outbound` drives the cycle interactively through the Apollo and HubSpot
+MCP connectors. **Scheduled jobs use REST with keys instead** — MCP needs a live
+session and is the wrong transport for a 6am cron.
 
 ---
 
@@ -99,21 +110,30 @@ a 4-step sequence consumes 4 emails per lead
 sustainable enrollments/day = capacity ÷ steps
 ```
 
-**Current configuration: 2 domains, 18 mailboxes.** At 30 sends/mailbox/day that
-is 540 emails/day ÷ 4 steps = **135 sustainable enrollments/day** — so a 100/day
-sourcing target sits comfortably inside capacity, with 35/day of slack.
+**Current configuration: 2 domains, 18 warmed mailboxes.** At 30 sends/mailbox/day
+that is 540 emails/day ÷ 4 steps = **135 sustainable enrollments/day**.
 
 Set `TOTAL_MAILBOXES` rather than `MAILBOXES_PER_DOMAIN` when mailboxes are not
-split evenly across domains. `/capacity` reports `oversourcing` when the daily
-target exceeds what can be mailed.
+split evenly across domains.
 
-Two things this does *not* say:
+### But send capacity is not the binding constraint
 
-- **If the 18 mailboxes are new, 30/day each will burn them.** Cold mailboxes
-  want ~10/day ramping over 3–4 weeks — which is 45 leads/day to start with.
-- **The binding constraint is Apollo credits, not send capacity.** 135 leads/day
-  needs roughly 340–470 credits/day for stage enrichment and email reveal at a
-  25–40% hit rate. Set the daily target against that number.
+Measured 2026-08-03: **2,135 Apollo lead credits, 24 days left in the cycle.** At
+~3 credits per mailable lead (one email reveal, plus stage enrichment across the
+companies that fail the check), that is **~30 leads/day** — and sourcing at the
+full 135/day would burn the entire monthly allowance in about **five days**.
+
+| Credits/lead | Leads left this cycle | Sustainable/day | Runway at 135/day |
+|---|---|---|---|
+| 2.5 | 854 | 36 | 6.3 days |
+| 3.0 | 712 | 30 | 5.3 days |
+| 3.5 | 610 | 25 | 4.5 days |
+
+**The daily target is `min(send capacity, credit budget)` ≈ 30/day.** This
+inverts the spec's §6 concern — mailing capacity exceeds sourcing budget by more
+than 4×, so mailboxes sit idle rather than leads piling up. Resolving it is a
+budget decision: raise the Apollo plan or accept ~30/day. Shortening the sequence
+raises send capacity but does not touch the credit line, so it does not help.
 
 ## Running jobs
 

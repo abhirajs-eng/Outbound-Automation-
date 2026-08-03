@@ -15,7 +15,10 @@ assumption recorded as fact is how the previous build lost an architecture.
 | §1.3 "200 delivered / 8 positive" floor detects ~4%→11.5% | **Confirmed** | 2026-08-03 | Computed, this repo |
 | §6 capacity worked example (2×3×30 ÷ 4 = 45) | **Confirmed** | 2026-08-03 | `tests/test_capacity.py` |
 | Postgres schema behaviour (all constraints) | **Confirmed** | 2026-08-03 | Live Postgres 16.13 |
-| §1.1 Apollo endpoint costs and response fields | **Inherited, unverified here** | spec: 2026-07-30/31 | Not re-checked — no key configured |
+| §1.1 Apollo search response fields | **Confirmed live** | 2026-08-03 | Live call via Apollo MCP |
+| §1.1 people search costs 0 credits | **Confirmed live** | 2026-08-03 | Credit balance bracketed around a search |
+| §1.1 50,000-record display cap | **Confirmed live** | 2026-08-03 | ICP filter set returns 49,416 |
+| §1.1 bulk_enrich = 1 credit/match, 10 domains/call | **Confirmed** | 2026-08-03 | Apollo tool contract |
 | §1.6 Smartlead contract | **Inherited, unverified here** | spec: 2026-07-30/31 | Not re-checked — no key configured |
 | §2 HubSpot facts (tiers, scopes, limits) | **Inherited, unverified here** | spec: 2026-08-03 | Not re-checked — no token configured |
 | HubSpot adapter behaviour (batching, 403 handling, partial failure) | **Confirmed against a fake transport** | 2026-08-03 | `verify_client` — contract shape assumed, error handling proven |
@@ -25,6 +28,96 @@ The inherited rows are treated as true for design purposes and **re-verified at
 the start of the phase that first depends on them** (Phase 2 HubSpot, Phase 3
 Apollo, Phase 5 Smartlead). Where docs and live behaviour disagree, live wins
 and the discrepancy is recorded here with a date.
+
+---
+
+## Apollo — verified live 2026-08-03
+
+Run against the live Apollo connector with the real ICP filter set.
+
+### The search response contains exactly this
+
+```
+id, first_name, last_name, title, linkedin_url, last_refreshed_at,
+organization: { id, name, domain }
+```
+
+**No email. No location. No employee count. No funding stage.** §1.1 is correct
+in full. Do not plan to filter locally on fields the response does not contain.
+
+`last_refreshed_at` is present and the spec did not mention it — useful as a
+staleness signal when deciding which cached leads to re-source.
+
+### People search costs 0 credits — proven, not assumed
+
+Credit balance immediately before the search: `consumed: 475, left_over: 2135`.
+Immediately after: `consumed: 475, left_over: 2135`. Unchanged. Sourcing wide
+and persisting stage-unknown is free, which is what makes deferred qualification
+the right default rather than merely a nice idea.
+
+### The standard ICP filter set is at 99% of the display cap on day one
+
+`total_entries: 49,416` against the hard 50,000 limit (100/page × 500 pages).
+**Facet rotation is not an optimisation — the very first filter set is already
+at the ceiling.** Without rotation the pipeline re-reads the same pages forever
+and quietly stops finding new leads.
+
+### There is no funding-stage filter — confirmed by absence
+
+The full people-search parameter list was inspected. It offers
+`organization_founded_year_range`, `revenue_range`,
+`organization_headcount_growth_range`, NAICS/SIC codes, technologies, job
+postings — and **nothing for funding stage or funding amount at all.** Even the
+`latest_funding_amount_range` / `latest_funding_date_range` the spec mentions
+for the raw REST API are absent from the connector. `organizations/bulk_enrich`
+remains the only source of `latest_funding_stage`, at 1 credit per match.
+
+### Two findings the spec did not have
+
+**Last names can be masked.** On some plans search returns obfuscated last
+names. This does **not** block enrichment — pass the `id` from search to
+`people/bulk_match`. Waiting for an unmasked last name would stall the pipeline
+for no reason.
+
+**`organization_founded_year_range` is an advanced filter** and returns an
+upgrade-required error on free plans. It works on this account (paid, 2,610
+lead credit limit). If the plan ever changes, that ICP filter fails rather than
+degrading, and `config/icp.yaml` `apollo_search.organization_founded_year_range`
+is the line to drop.
+
+---
+
+## The binding constraint is Apollo credits, not send capacity
+
+**Confirmed 2026-08-03:** all 18 mailboxes are warmed, so 30 sends/mailbox/day
+is sustainable immediately — no ramp needed. Send capacity is therefore
+**135 enrollments/day** (18 × 30 ÷ 4 steps), and `SENDS_PER_MAILBOX_DAY=30`.
+
+Live credit balance the same day: **2,135 lead credits, cycle ending
+2026-08-27** — 24 days.
+
+At roughly 3 credits per mailable lead (1 email reveal, plus funding-stage
+enrichment across the companies that fail the stage check):
+
+| Credits/lead | Leads left this cycle | Sustainable/day | Runway at 135/day |
+|---|---|---|---|
+| 2.5 | 854 | 36 | 6.3 days |
+| 3.0 | 712 | 30 | 5.3 days |
+| 3.5 | 610 | 25 | 4.5 days |
+
+**Sourcing at send capacity exhausts a full monthly credit allowance in about
+five days.** The daily target is `min(send capacity, credit budget)` ≈ **30/day**,
+not 135.
+
+This inverts the spec's §6 concern. §6 warns about sourcing *faster* than you
+can mail, building a backlog of decaying leads. Here mailing capacity exceeds
+sourcing budget by more than 4×, so the mailboxes will sit idle unless credits
+are increased. Both are real failure modes; only the second one applies.
+
+Resolving it is a budget decision, not an engineering one: raise the Apollo
+plan, accept ~30 leads/day, or shorten the sequence (a 3-step sequence raises
+send capacity to 180/day but does not touch the credit line, so it does not
+help here).
 
 ---
 
@@ -91,23 +184,19 @@ product form still works and the spec's worked example still yields 45/day.
 From Phase 5 the count will come from Smartlead's `GET /email-accounts` rather
 than from `.env` at all — a real count beats a configured one.
 
-**What this changes strategically:** at 30 sends/mailbox/day, 18 mailboxes give
-540 emails/day ÷ 4 steps = **135 sustainable enrollments/day**. The spec's worry
-— a 100/day sourcing target against 45/day capacity building ~1,650 unmailable
-leads a month — **does not apply here.** 100/day is comfortably within capacity
-(35/day of slack).
+**What this changes strategically:** all 18 mailboxes are warmed (confirmed
+2026-08-03), so 30 sends/mailbox/day is sustainable immediately with no ramp.
+That gives 540 emails/day ÷ 4 steps = **135 sustainable enrollments/day**. The
+spec's worry — a 100/day sourcing target against 45/day capacity building ~1,650
+unmailable leads a month — **does not apply here.**
 
-The binding constraint moves elsewhere: 18 mailboxes at 135 leads/day needs
-roughly **340–470 Apollo credits/day** for stage enrichment and email reveal at
-a 25–40% hit rate. Sourcing volume is an Apollo spend question, not a send
-capacity question. Recorded here so the daily target is set against the right
-number.
+The binding constraint turned out to be Apollo credits instead, by roughly 4×.
+See "The binding constraint is Apollo credits, not send capacity" below for the
+measured numbers.
 
-**Warm-up caveat, not yet resolved:** if these 18 mailboxes are new, 30/day each
-from day one will burn them. Cold mailboxes want ~10/day ramping over 3–4 weeks,
-which is 45 leads/day initially — back at the spec's figure. `mailboxes.status`
-carries a `warming` value and `warmup_started_at` for this; whether the ramp is
-needed is a question for the operator before Phase 5.
+`mailboxes.status` still carries `warming` and `warmup_started_at` for mailboxes
+added later — a new domain always starts cold regardless of what the existing
+ones do.
 
 ### 4. Section 0 was left unfilled
 
