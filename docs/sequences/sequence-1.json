@@ -1,0 +1,49 @@
+{
+  "campaign_name": "Follow-Through Story",
+  "copy_leads_from_campaign": 3650607,
+  "sending_mailbox": "abhiraj@getaudria.com",
+  "mailbox_signature": "Abhiraj",
+  "steps": [
+    {
+      "seq_number": 1,
+      "delay_days": 0,
+      "subject": "the things you agreed to this week",
+      "body": [
+        "Hi {{first_name}},",
+        "Most of what you commit to in a week is never written down anywhere. You said it out loud, at someone's desk, in the corridor after standup, over coffee with the laptop shut. By Thursday, half of it is gone.",
+        "Audria is an agentic AI notetaker. You turn it on when you reach the office and it catches the whole day. By the time you are back at your desk, the email is drafted, the Jira ticket is ready to file, and each one shows the exact words it came from. Nothing is sent automatically. You review, edit if needed, and approve.",
+        "And it adds up. Months of thinking out loud, your idea's whole evolution, every pivot, laid out in front of you.",
+        "It is live now, free during early access on iPhone and Mac. Want to see your own week captured? <a href=\"https://apps.apple.com/app/audria/id6759240637\">Audria on the App Store</a>",
+        "%signature%"
+      ]
+    },
+    {
+      "seq_number": 2,
+      "delay_days": 3,
+      "subject": "",
+      "_subject_note": "Empty on purpose. Smartlead threads an empty-subject step as a reply on the step 1 thread, which is what 're: the things you agreed to this week' was asking for. Typing the 're:' literally would start a new thread that only looks like a reply.",
+      "body": [
+        "Hi {{first_name}}, one thought and then I will leave it.",
+        "Nearly every meeting tool needs you to press record, so it only ever sees what is on your calendar. The desk conversation, the corridor, the coffee, none of it gets caught. That is most of a founder's day.",
+        "That is the gap Audria exists for, and you can try it today, free during early access: <a href=\"https://apps.apple.com/app/audria/id6759240637\">Audria on the App Store</a>",
+        "%signature%"
+      ]
+    },
+    {
+      "seq_number": 3,
+      "delay_days": 7,
+      "subject": "what I learned reading 900 comments about AI meeting tools",
+      "_variant_note": "Long version only. The short version and the half/half split were not supplied; add as a second seq_variant at 50/50 when it arrives.",
+      "body": [
+        "Hi {{first_name}}, last one from me.",
+        "Before we wrote a line of positioning, I read about 900 comments from people using AI meeting tools. Three things stood out.",
+        "One. Transcription is finished as a business. Someone in those threads transcribed 60 meetings for under two dollars with a pipeline he built himself. There are around a hundred of these apps and prices are collapsing toward zero.",
+        "Two. Summaries tell you what was discussed, not who is on the hook. Two separate people asked whether any tool could pull the actual commitments out of a meeting, the \"I will send it by Thursday\" moments, without a human cleaning it up afterwards. In threads full of vendors, both questions got zero replies.",
+        "Three. Nearly everything needs you to press record. A few wearables and one second-brain app listen all day, but every meeting tool people actually recommended only sees the meetings you chose to capture. And even the always-on ones stop at transcripts and summaries. Nothing comes back with the work done.",
+        "Audria answers all three. Transcription is in there as table stakes. Every action it drafts names who said they would do what, with the exact line from the conversation as proof, waiting for your approval. And there is no record button: you turn it on once when you reach the office, and what comes back is the email drafted and the ticket ready to file. We have not found anyone else with that combination.",
+        "It is live, free during early access on iPhone and Mac: <a href=\"https://apps.apple.com/app/audria/id6759240637\">Audria on the App Store</a>",
+        "%signature%"
+      ]
+    }
+  ]
+}

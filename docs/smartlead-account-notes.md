@@ -20,6 +20,17 @@ Working. `SMARTLEAD_API_KEY` in the environment authenticates against
 - `api.smartlead.ai` is not reachable from this environment; use
   `server.smartlead.ai`.
 
+Write-side quirks, all found the hard way:
+
+- Sequence delays are **`delay_in_days` on write** but come back as
+  `delayInDays` on read. Posting the camelCase form 400s.
+- `offset`/`limit` are rejected on `campaigns/{id}`, `/sequences`, and
+  `/email-accounts`, but **required-ish** on `/leads` (which caps `limit` at
+  100). Passing them where they don't belong 400s.
+- `track_settings` values are normalised on save: post
+  `DONT_TRACK_EMAIL_OPEN` / `DONT_TRACK_LINK_CLICK`, read back
+  `DONT_EMAIL_OPEN` / `DONT_LINK_CLICK`. Same thing, don't chase it.
+
 ## The three campaigns
 
 `FINAL Qualifiers 1` (3650607), `2` (3650609), `3` (3650610). Created within ~7
